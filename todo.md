@@ -1,6 +1,6 @@
 # ToDos (broad)
 - [ ] Setup HTMl/CSS/JS skeletons
-- [ ] [Complete basic view](##View)
+- [ ] [Complete basic view](#View)
 - [ ] Game logic (with difficulty modifier in mind)
 - [ ] Welcome screen (with difficulty options)
 # Stretch ToDos (broad)
@@ -12,5 +12,7 @@
 - [ ] Display grid
 - [ ] Display timer (can be non-functional)
 - [ ] Display mines left (can be non-functional)
+- [ ] Display welcome (simple message + confirmation)
+- [ ] Create loss/win message (simplified)
 
 <sup>*completely optional if implementation becomes more work than fun</sup>
