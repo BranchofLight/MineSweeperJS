@@ -1,6 +1,6 @@
 # ToDos (broad)
 - [ ] Setup HTMl/CSS/JS skeletons
-- [ ] [Complete basic view](#View)
+- [ ] [Complete basic view](#view)
 - [ ] Game logic (with difficulty modifier in mind)
 - [ ] Welcome screen (with difficulty options)
 # Stretch ToDos (broad)
