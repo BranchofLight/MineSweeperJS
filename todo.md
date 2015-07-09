@@ -3,7 +3,7 @@
 - [ ] [Complete basic view](#view)
 - [ ] Game logic (with difficulty modifier in mind)
 - [ ] Welcome screen (with difficulty options)
-## Stretch ToDos (broad)
+#### Stretch ToDos (broad)
 - [ ] Create mobile web app version (to be loaded instead if mobile device is detected)
 - [ ] High scores*
 
