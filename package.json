@@ -1,0 +1,23 @@
+{
+  "name": "minesweeperjs",
+  "version": "0.0.0",
+  "description": "Placeholder description",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BranchofLight/MineSweeperJS.git"
+  },
+  "author": "Scott Andrechek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BranchofLight/MineSweeperJS/issues"
+  },
+  "homepage": "https://github.com/BranchofLight/MineSweeperJS",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-concat": "^0.5.1"
+  }
+}
