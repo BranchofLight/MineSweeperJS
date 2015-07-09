@@ -12,11 +12,18 @@ module.exports = function(grunt) {
         dest: 'dist/build.js',
       },      
     },
+    watch: {
+      files: ['src/*.js'],
+      tasks: ['concat'],
+    },
   });
 
   // Load the plugin that provides the "concat" task.
   grunt.loadNpmTasks('grunt-contrib-concat');
+  // Load the plugin that provides the "watch" task.
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   // Default task(s).
   grunt.registerTask('default', ['concat']);
+  grunt.registerTask('wat', ['watch']);
 };

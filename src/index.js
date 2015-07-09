@@ -1,4 +1,7 @@
 $(document).ready(function() {
-	$('p').css('color', 'green');
 	console.log("Hello World!");
+
+	var view = new GameView();
+	view.field = view.generateField(3, 3);
+	console.log(view.field);
 });
