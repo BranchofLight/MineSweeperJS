@@ -2,7 +2,6 @@
  * Purpose: All views
  * Source:  src/view.js
  */
-
 // Placeholder hack class
 function GameView() {
 	this.field = "";
