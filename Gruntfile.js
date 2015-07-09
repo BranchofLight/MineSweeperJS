@@ -25,5 +25,6 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['concat']);
+  // Non-default task(s)
   grunt.registerTask('wat', ['watch']);
 };
