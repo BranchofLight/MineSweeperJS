@@ -33,7 +33,7 @@ var gameView = {
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
-				html += "<div class=\"cell\">";
+				html += "<div class=\"cell loc " + i + " " + j + "\">";
 				html += gameField.getCell(i, j).getShownValue();
 				html += "</div>";
 			}
@@ -51,10 +51,13 @@ var gameView = {
 			that.setCellDimensions();
 		});
 	},
+	/* Placeholder hack */
+	refreshField: function() {
+		$('#game-field').remove();
+		this.displayField();
+	},
 	/**
 	 * Changes width and height of every cell 
-	 * @param {Number} width
-	 * @param {Number} height
 	 */
 	setCellDimensions: function() {
 		// Taking 90% ensures that there will be no overflowing rows
@@ -81,7 +84,6 @@ var gameView = {
  */
 var setResizeEvent = function(resizeFunc) {
 	$(window).resize(function() {
-		console.log("resizing");
 		resizeFunc();
 	});
 };

@@ -11,6 +11,9 @@ $(document).ready(function() {
 	console.log("Field: ");
 	gameView.displayTextField();
 	gameView.displayField();
+
+	for (prop in listeners)
+		listeners[prop]();
 });
 
 /**
@@ -114,10 +117,21 @@ var cell = function(x2, y2, value2) {
 		getIsChecked: function() {
 			return isChecked;
 		},
-		toggleIsChecked: function() {
-			isChecked = !isChecked;
+		setIsChecked: function(val) {
+			isChecked = (typeof val === "boolean") ? val : false;
 		}
 	};
+};
+
+var listeners = {
+	click: function() {
+		$('#main-container').on('click', '.cell', function() {
+			var location = $(this).attr('class').match(/\d+/g);
+			var cell = gameField.getCell(location[0], location[1]);
+			cell.setIsChecked(true);
+			gameView.refreshField();
+		});
+	}
 };
 /**
  * Purpose: All Views
@@ -154,7 +168,7 @@ var gameView = {
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
-				html += "<div class=\"cell\">";
+				html += "<div class=\"cell loc " + i + " " + j + "\">";
 				html += gameField.getCell(i, j).getShownValue();
 				html += "</div>";
 			}
@@ -172,10 +186,13 @@ var gameView = {
 			that.setCellDimensions();
 		});
 	},
+	/* Placeholder hack */
+	refreshField: function() {
+		$('#game-field').remove();
+		this.displayField();
+	},
 	/**
 	 * Changes width and height of every cell 
-	 * @param {Number} width
-	 * @param {Number} height
 	 */
 	setCellDimensions: function() {
 		// Taking 90% ensures that there will be no overflowing rows
@@ -202,7 +219,6 @@ var gameView = {
  */
 var setResizeEvent = function(resizeFunc) {
 	$(window).resize(function() {
-		console.log("resizing");
 		resizeFunc();
 	});
 };

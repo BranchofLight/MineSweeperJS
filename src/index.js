@@ -11,4 +11,7 @@ $(document).ready(function() {
 	console.log("Field: ");
 	gameView.displayTextField();
 	gameView.displayField();
+
+	for (prop in listeners)
+		listeners[prop]();
 });

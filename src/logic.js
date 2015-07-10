@@ -99,8 +99,19 @@ var cell = function(x2, y2, value2) {
 		getIsChecked: function() {
 			return isChecked;
 		},
-		toggleIsChecked: function() {
-			isChecked = !isChecked;
+		setIsChecked: function(val) {
+			isChecked = (typeof val === "boolean") ? val : false;
 		}
 	};
+};
+
+var listeners = {
+	click: function() {
+		$('#main-container').on('click', '.cell', function() {
+			var location = $(this).attr('class').match(/\d+/g);
+			var cell = gameField.getCell(location[0], location[1]);
+			cell.setIsChecked(true);
+			gameView.refreshField();
+		});
+	}
 };
