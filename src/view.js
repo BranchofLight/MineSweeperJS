@@ -23,5 +23,24 @@ var gameView = {
 		}
 
 		console.log(strField);
+	},
+	/**
+	 * Displays HTML/CSS field
+	 */
+	displayField: function() {
+		strField = "<div id=\"game-field\">";
+		for (var i = 0; i < gameField.getRows(); i++) {
+			for (var j = 0; j < gameField.getColumns(); j++)
+			{
+				strField += "<div class=\"cell\">";
+				strField += gameField.getCell(i, j).getValue();
+				strField += "</div>";
+			}
+
+			strField += "<br />"
+		}
+
+		strField += "</div>";
+		$('#main-container').html(strField);
 	}
 };

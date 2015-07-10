@@ -5,11 +5,12 @@
 $(document).ready(function() {
 	console.log("Hello World!");
 	
-	gameField.generateField(3, 3);
+	gameField.generateField(9, 9);
 	console.log("rows: " + gameField.rows);
 	console.log("columns: " + gameField.columns);
 	console.log("Field: ");
-	GameView.displayTextField();
+	gameView.displayTextField();
+	gameView.displayField();
 });
 
 /**
@@ -58,8 +59,8 @@ var gameField = function () {
 		 */
 		generateField: function(r, c) {
 			// Set new values
-			rows = r;
-			columns = c;
+			rows = (typeof r === "number") ? r : 0;
+			columns = (typeof c === "number") ? c : 0;
 			// Push new field onto field
 			for (var i = 0; i < rows; i++) {
 				// New array (row)
@@ -121,5 +122,24 @@ var gameView = {
 		}
 
 		console.log(strField);
+	},
+	/**
+	 * Displays HTML/CSS field
+	 */
+	displayField: function() {
+		strField = "<div id=\"game-field\">";
+		for (var i = 0; i < gameField.getRows(); i++) {
+			for (var j = 0; j < gameField.getColumns(); j++)
+			{
+				strField += "<div class=\"cell\">";
+				strField += gameField.getCell(i, j).getValue();
+				strField += "</div>";
+			}
+
+			strField += "<br />"
+		}
+
+		strField += "</div>";
+		$('#main-container').html(strField);
 	}
 };

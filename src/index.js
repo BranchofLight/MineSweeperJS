@@ -5,9 +5,10 @@
 $(document).ready(function() {
 	console.log("Hello World!");
 	
-	gameField.generateField(3, 3);
+	gameField.generateField(9, 9);
 	console.log("rows: " + gameField.rows);
 	console.log("columns: " + gameField.columns);
 	console.log("Field: ");
-	GameView.displayTextField();
+	gameView.displayTextField();
+	gameView.displayField();
 });

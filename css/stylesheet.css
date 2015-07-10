@@ -1,5 +1,16 @@
-p {
+body > p {
 	font-size: 20px;
 	font-weight: bold;
 	color: blue;
+}
+
+#game-field {
+	font-weight: bold;
+}
+
+.cell {
+	display: inline;
+	width: 100px;
+	height: 100px;
+	padding: 10px;
 }

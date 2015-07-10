@@ -44,8 +44,8 @@ var gameField = function () {
 		 */
 		generateField: function(r, c) {
 			// Set new values
-			rows = r;
-			columns = c;
+			rows = (typeof r === "number") ? r : 0;
+			columns = (typeof c === "number") ? c : 0;
 			// Push new field onto field
 			for (var i = 0; i < rows; i++) {
 				// New array (row)
