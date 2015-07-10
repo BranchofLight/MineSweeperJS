@@ -51,10 +51,17 @@ var gameView = {
 			that.setCellDimensions();
 		});
 	},
-	/* Placeholder hack */
-	refreshField: function() {
-		$('#game-field').remove();
-		this.displayField();
+	/**
+	 * Refreshes the view for the given cell
+	 * @param {Object} cellToRefresh
+	 */
+	refreshCell: function(cellToRefresh) {
+		$('.cell').each(function() {
+			if ($(this).data('row') === cellToRefresh.getRow() &&
+			    $(this).data('col') === cellToRefresh.getCol()) {
+						$(this).html(cellToRefresh.getShownValue());
+					}
+		});
 	},
 	/**
 	 * Changes width and height of every cell

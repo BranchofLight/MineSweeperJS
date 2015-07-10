@@ -5,13 +5,14 @@
 $(document).ready(function() {
 	console.log("Hello World!");
 
-	gameField.generateField(2, 9);
+	gameField.generateField(9, 9);
 	console.log("rows: " + gameField.rows);
 	console.log("columns: " + gameField.columns);
 	console.log("Field: ");
 	gameView.displayTextField();
 	gameView.displayField();
 
+	// Activate listeners
 	for (var prop in listeners)
 		listeners[prop]();
 });
@@ -26,7 +27,7 @@ $(document).ready(function() {
   * @return {String} ' '
   */
  var blank = function() {
- 	return ' ';
+ 	return '.';
 };
 
  /**
@@ -56,8 +57,8 @@ var gameField = function () {
 		getMine: function() {
 			return 'X';
 		},
-		getCell: function(x, y) {
-			return field[x][y];
+		getCell: function(r, c) {
+			return field[r][c];
 		},
 		/**
 		 * Returns a generated empty
@@ -86,24 +87,24 @@ var gameField = function () {
  * Name: cell
  * Purpose: For holding information pertaining
  * . to an individual cell in the game field
- * @param {Number} x2
- * @param {Number} y2
- * @param {Number} value2
+ * @param {Number} r
+ * @param {Number} c
+ * @param {Number} val
  */
-var cell = function(x2, y2, value2) {
+var cell = function(r, c, val) {
 	/* Set Private Variables */
-	var x = (typeof x2 === "number") ? x : 0;
-	var y = (typeof y2 === "number") ? y : 0;
-	var value = value2 || undefined;
+	var row = (typeof r === "number") ? r : 0;
+	var col = (typeof c === "number") ? c : 0;
+	var value = val || undefined;
 	var isChecked = false;
 
 	/* Object Literal */
 	return {
-		getX: function() {
-			return x;
+		getRow: function() {
+			return row;
 		},
-		getY: function() {
-			return y;
+		getCol: function() {
+			return col;
 		},
 		// Returns the actual value regardless
 		// . if it's shown
@@ -130,11 +131,13 @@ var cell = function(x2, y2, value2) {
  */
 var listeners = {
 	click: function() {
+    // Calling 'on' on #main-container makes sure it will work
+    // even if no .cells are present on initialization
 		$('#main-container').on('click', '.cell', function() {
 			var location = [$(this).data('row'), $(this).data('col')];
-			var cell = gameField.getCell(location[0], location[1]);
-			cell.setIsChecked(true);
-			gameView.refreshField();
+			var clickedCell = gameField.getCell(location[0], location[1]);
+			clickedCell.setIsChecked(true);
+			gameView.refreshCell(clickedCell);
 		});
 	}
 };
@@ -192,10 +195,17 @@ var gameView = {
 			that.setCellDimensions();
 		});
 	},
-	/* Placeholder hack */
-	refreshField: function() {
-		$('#game-field').remove();
-		this.displayField();
+	/**
+	 * Refreshes the view for the given cell
+	 * @param {Object} cellToRefresh
+	 */
+	refreshCell: function(cellToRefresh) {
+		$('.cell').each(function() {
+			if ($(this).data('row') === cellToRefresh.getRow() &&
+			    $(this).data('col') === cellToRefresh.getCol()) {
+						$(this).html(cellToRefresh.getShownValue());
+					}
+		});
 	},
 	/**
 	 * Changes width and height of every cell

@@ -1,10 +1,10 @@
 body {
 	/* Used to prevent text being selected */
-	-webkit-user-select: none; /* Chrome/Safari */        
+	-webkit-user-select: none; /* Chrome/Safari */
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
 
-	background: #FE5155;
+	background: #C4C9D4;
 }
 
 body > p {
@@ -29,18 +29,18 @@ body > p {
 	/* For aligning text */
 	text-align: center;
 
-	background: #7FF073;
+	background: #6F7E9D;
 	font-size: 1em;
 	font-family: 'Arimo', sans-serif;
 	border: 1px solid black;
 }
 
 .cell:hover {
-	opacity: 0.9;
-	background: #7FF073;
+	opacity: 0.5;
 	cursor: pointer;
 }
 
 .cell:active {
-	background: #14D600;
+	opacity: 1;
+	background: #6F7EAA;
 }
