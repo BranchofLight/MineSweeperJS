@@ -30,9 +30,10 @@ body > p {
 	text-align: center;
 
 	background: #6F7E9D;
-	font-size: 1em;
+	font-size: 2em;
 	font-family: 'Arimo', sans-serif;
-	border: 1px solid black;
+	/* Borders are added with JS to prevent overlap */
+	/* border: 1px solid black; */
 }
 
 .cell:hover {

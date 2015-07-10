@@ -8,7 +8,7 @@
   * @return {String} ' '
   */
  var blank = function() {
- 	return '.';
+ 	return '-';
 };
 
  /**

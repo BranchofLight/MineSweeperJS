@@ -27,7 +27,7 @@ $(document).ready(function() {
   * @return {String} ' '
   */
  var blank = function() {
- 	return '.';
+ 	return '-';
 };
 
  /**
@@ -188,6 +188,7 @@ var gameView = {
 		}
 
 		$('#game-field').html(html);
+		this.setBorders();
 		this.setCellDimensions();
 
 		var that = this;
@@ -224,8 +225,27 @@ var gameView = {
 		$('.cell').css('height', cellDimension);
 		// Keeps text vertically centered (note: will only work with one line of text)
 		$('.cell').css('line-height', $('.cell').css('height'));
+		// Give 50% of the cell to text
+		$('.cell').css('font-size', cellDimension*0.5);
 		// Sets new width giving 10% extra for borders, etc
 		$('#game-field').css('width', (cellDimension*gameField.getColumns()*1.1));
+	},
+	/**
+	 * Sets borders for all cells to prevent overlap
+	 */
+	setBorders: function() {
+		$('.cell').each(function() {
+			$(this).css('border-left', '1px solid black');
+			$(this).css('border-top', '1px solid black');
+
+			if ($(this).data('col') === gameField.getColumns()-1) {
+				$(this).css('border-right', '1px solid black');
+			}
+
+			if ($(this).data('row') === gameField.getRows()-1) {
+				$(this).css('border-bottom', '1px solid black');
+			}
+		});
 	}
 };
 
