@@ -4,8 +4,8 @@
  */
 
 /**
- * Name: GameView 
- * Purpose: Contains everything necessary 
+ * Name: GameView
+ * Purpose: Contains everything necessary
  * . to work with the game view
  */
 var gameView = {
@@ -28,23 +28,23 @@ var gameView = {
 	 * Displays HTML/CSS field
 	 */
 	displayField: function() {
-		html = "<div id=\"game-field\">";
+		html = "<div id=\"game-field\"></div>";
+		$('#main-container').html(html);
 
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
-				html += "<div class=\"cell loc " + i + " " + j + "\">";
+				html += "<div class=\"cell\" ";
+				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
 				html += gameField.getCell(i, j).getShownValue();
 				html += "</div>";
 			}
 
 			html += "<br />";
 		}
-		// Close div id=game-field 
-		html += "</div>";
 
-		$('#main-container').html(html);	
-		this.setCellDimensions();	
+		$('#game-field').html(html);
+		this.setCellDimensions();
 
 		var that = this;
 		setResizeEvent(function() {
@@ -57,7 +57,7 @@ var gameView = {
 		this.displayField();
 	},
 	/**
-	 * Changes width and height of every cell 
+	 * Changes width and height of every cell
 	 */
 	setCellDimensions: function() {
 		// Taking 90% ensures that there will be no overflowing rows
@@ -65,7 +65,7 @@ var gameView = {
 		var cellWidth = (($(window).width())*0.6 / gameField.getColumns())*0.9;
 		// Allocates 75% of the viewport's height to gameField
 		var cellHeight = ($(window).height() / gameField.getRows())*0.75;
-		
+
 		// Use the smallest value (so it fits regardless)
 		var cellDimension = (cellWidth < cellHeight) ? cellWidth : cellHeight;
 
@@ -79,7 +79,7 @@ var gameView = {
 };
 
 /**
- * Changes resize event binding 
+ * Changes resize event binding
  * @param {Function} resizeFunc
  */
 var setResizeEvent = function(resizeFunc) {

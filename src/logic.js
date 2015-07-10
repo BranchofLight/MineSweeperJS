@@ -3,19 +3,19 @@
  * Source:  src/logic.js
  */
 
- /** 
-  * Returns a blank cell value 
+ /**
+  * Returns a blank cell value
   * @return {String} ' '
-  */ 
+  */
  var blank = function() {
  	return ' ';
- }
+};
 
- /** 
-  * Name: gameField 
+ /**
+  * Name: gameField
   * Purpose: Object holding all information
   * about the game field
-  */  
+  */
 var gameField = function () {
 	/* Private Variables */
 	var rows = 0;
@@ -42,7 +42,7 @@ var gameField = function () {
 			return field[x][y];
 		},
 		/**
-		 * Returns a generated empty 
+		 * Returns a generated empty
 		 * . field based on given paramaters
 		 * @param {Number} rows
 		 * @param {Number} columns
@@ -60,7 +60,7 @@ var gameField = function () {
 					field[i].push(cell(i, j, this.getMine()));
 				}
 			}
-		}		
+		}
 	};
 }();
 
@@ -91,7 +91,7 @@ var cell = function(x2, y2, value2) {
 		// . if it's shown
 		getRealValue: function() {
 			return value;
-		}, 
+		},
 		// Returns the value shown to the player
 		getShownValue: function() {
 			return (isChecked) ? value : blank();
@@ -105,10 +105,15 @@ var cell = function(x2, y2, value2) {
 	};
 };
 
+/**
+ * Holds all listeners needed
+ * . outside objects for the game
+ * (can be activated anywhere)
+ */
 var listeners = {
 	click: function() {
 		$('#main-container').on('click', '.cell', function() {
-			var location = $(this).attr('class').match(/\d+/g);
+			var location = [$(this).data('row'), $(this).data('col')];
 			var cell = gameField.getCell(location[0], location[1]);
 			cell.setIsChecked(true);
 			gameView.refreshField();
