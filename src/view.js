@@ -1,26 +1,27 @@
 /**
- * Purpose: All views
+ * Purpose: All Views
  * Source:  src/view.js
  */
-// Placeholder hack class
-function GameView() {
-	this.field = "";
+
+/**
+ * Name: GameView 
+ * Purpose: Contains everything necessary 
+ * . to work with the game view
+ */
+var gameView = {
 	/**
-	 * Returns a generated empty 
-	 * . field based on given paramaters
-	 * @param {Number} rows
-	 * @param {Number} columns
-	 * @return {Array} arr
+	 * Displays field as text
 	 */
-	this.generateField = function(rows, columns) {
-		var arr = [];
-		for (var i = 0; i < rows; i++) {
-			arr.push(new Array());
-			for (var j = 0; j < columns; j++) {
-				arr[i].push('x');
+	displayTextField: function() {
+		strField = "";
+		for (var i = 0; i < gameField.getRows(); i++) {
+			for (var j = 0; j < gameField.getColumns(); j++)
+			{
+				strField += gameField.getCell(i, j).getValue();
 			}
+			strField += "\n";
 		}
 
-		return arr;
-	};
+		console.log(strField);
+	}
 };
