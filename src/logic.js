@@ -49,7 +49,7 @@ var gameField = function () {
 			// Push new field onto field
 			for (var i = 0; i < rows; i++) {
 				// New array (row)
-				field.push(new Array());
+				field.push([]);
 				for (var j = 0; j < columns; j++) {
 					field[i].push(cell(i, j, this.getMine()));
 				}
@@ -62,12 +62,15 @@ var gameField = function () {
  * Name: cell
  * Purpose: For holding information pertaining
  * . to an individual cell in the game field
+ * @param {Number} x2
+ * @param {Number} y2
+ * @param {Number} value2
  */
-var cell = function(x, y, value) {
+var cell = function(x2, y2, value2) {
 	/* Set Private Variables */
-	var x = (typeof x === "number") ? x : 0;
-	var y = (typeof y === "number") ? y : 0;
-	var value = value || undefined;
+	var x = (typeof x2 === "number") ? x : 0;
+	var y = (typeof y2 === "number") ? y : 0;
+	var value = value2 || undefined;
 
 	/* Object Literal */
 	return {

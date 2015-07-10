@@ -64,7 +64,7 @@ var gameField = function () {
 			// Push new field onto field
 			for (var i = 0; i < rows; i++) {
 				// New array (row)
-				field.push(new Array());
+				field.push([]);
 				for (var j = 0; j < columns; j++) {
 					field[i].push(cell(i, j, this.getMine()));
 				}
@@ -77,12 +77,15 @@ var gameField = function () {
  * Name: cell
  * Purpose: For holding information pertaining
  * . to an individual cell in the game field
+ * @param {Number} x2
+ * @param {Number} y2
+ * @param {Number} value2
  */
-var cell = function(x, y, value) {
+var cell = function(x2, y2, value2) {
 	/* Set Private Variables */
-	var x = (typeof x === "number") ? x : 0;
-	var y = (typeof y === "number") ? y : 0;
-	var value = value || undefined;
+	var x = (typeof x2 === "number") ? x : 0;
+	var y = (typeof y2 === "number") ? y : 0;
+	var value = value2 || undefined;
 
 	/* Object Literal */
 	return {
@@ -127,19 +130,53 @@ var gameView = {
 	 * Displays HTML/CSS field
 	 */
 	displayField: function() {
-		strField = "<div id=\"game-field\">";
+		html = "<div id=\"game-field\">";
+
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
-				strField += "<div class=\"cell\">";
-				strField += gameField.getCell(i, j).getValue();
-				strField += "</div>";
+				html += "<div class=\"cell\">";
+				html += gameField.getCell(i, j).getValue();
+				html += "</div>";
 			}
 
-			strField += "<br />"
+			html += "<br />";
 		}
+		// Close div id=game-field 
+		html += "</div>";
 
-		strField += "</div>";
-		$('#main-container').html(strField);
+		$('#main-container').html(html);		
+		// Taking 90% ensures that there will be no overflowing rows
+		var cellWidth = ($('#game-field').width() / gameField.getColumns())*0.9;
+		// Allocates 75% of the viewport's height to gameField
+		var cellHeight = ($(window).height() / gameField.getRows())*0.75;
+		this.setCellDimensions(cellWidth, cellHeight);
+
+		var that = this;
+
+		setResizeEvent(function() {
+			var cellWidth = ($('#game-field').width() / gameField.getColumns())*0.9;
+			var cellHeight = ($(window).height() / gameField.getRows())*0.75;
+			that.setCellDimensions(cellWidth, cellHeight);
+		});
+	},
+	/**
+	 * Changes width and height of every cell 
+	 * @param {Number} width
+	 * @param {Number} height
+	 */
+	setCellDimensions: function(width, height) {
+		$('.cell').css('width', width);
+		$('.cell').css('height', height);
 	}
+};
+
+/**
+ * Changes resize event binding 
+ * @param {Function} resizeFunc
+ */
+var setResizeEvent = function(resizeFunc) {
+	$(window).resize(function() {
+		resizeFunc();
+	});
 };

@@ -6,12 +6,21 @@ body > p {
 
 #game-field {
 	font-weight: bold;
+	width: 60%;
+	margin: auto;
 }
 
 .cell {
 	/* tiny.cc/clr for colours */
-	display: inline;
-	width: 100px;
-	height: 100px;
-	padding: 10px;
+	display: inline-block;
+	width: 3em;
+	height: 3em;
+
+	/* For aligning text */
+	line-height: 5em;
+	text-align: center;
+
+	/* Debug */
+	background: red;
+	border: 2px solid black;	
 }

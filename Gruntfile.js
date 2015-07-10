@@ -16,15 +16,21 @@ module.exports = function(grunt) {
       files: ['src/*.js'],
       tasks: ['concat'],
     },
+    jshint: {
+      beforeconcat: ['src/*.js'],
+      afterconcat: ['dist/build.js']
+    }
   });
 
   // Load the plugin that provides the "concat" task.
   grunt.loadNpmTasks('grunt-contrib-concat');
   // Load the plugin that provides the "watch" task.
   grunt.loadNpmTasks('grunt-contrib-watch');
+  // Load the plugin that provides the "jshint" task.
+  grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Default task(s).
-  grunt.registerTask('default', ['concat']);
+  grunt.registerTask('default', ['concat', 'jshint']);
   // Non-default task(s)
   grunt.registerTask('wat', ['watch']);
 };
