@@ -4,6 +4,14 @@
  */
 
  /** 
+  * Returns a blank cell value 
+  * @return {String} ' '
+  */ 
+ var blank = function() {
+ 	return ' ';
+ }
+
+ /** 
   * Name: gameField 
   * Purpose: Object holding all information
   * about the game field
@@ -24,10 +32,8 @@ var gameField = function () {
 		getRows: function() {
 			return rows;
 		},
-		// Empty cell value
-		getEmpty: function() {
-			return ' ';
-		},
+		// Empty or not-clicked cell value
+		getBlank: blank(),
 		// Mine cell value
 		getMine: function() {
 			return 'X';
@@ -71,6 +77,7 @@ var cell = function(x2, y2, value2) {
 	var x = (typeof x2 === "number") ? x : 0;
 	var y = (typeof y2 === "number") ? y : 0;
 	var value = value2 || undefined;
+	var isChecked = false;
 
 	/* Object Literal */
 	return {
@@ -80,8 +87,20 @@ var cell = function(x2, y2, value2) {
 		getY: function() {
 			return y;
 		},
-		getValue: function() {
+		// Returns the actual value regardless
+		// . if it's shown
+		getRealValue: function() {
 			return value;
+		}, 
+		// Returns the value shown to the player
+		getShownValue: function() {
+			return (isChecked) ? value : blank();
+		},
+		getIsChecked: function() {
+			return isChecked;
+		},
+		toggleIsChecked: function() {
+			isChecked = !isChecked;
 		}
 	};
 };
