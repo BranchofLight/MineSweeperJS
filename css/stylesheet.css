@@ -9,6 +9,7 @@ body > p {
 }
 
 .cell {
+	/* tiny.cc/clr for colours */
 	display: inline;
 	width: 100px;
 	height: 100px;
