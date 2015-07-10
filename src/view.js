@@ -51,7 +51,6 @@ var gameView = {
 		this.setCellDimensions(cellWidth, cellHeight);
 
 		var that = this;
-
 		setResizeEvent(function() {
 			var cellWidth = ($('#game-field').width() / gameField.getColumns())*0.9;
 			var cellHeight = ($(window).height() / gameField.getRows())*0.75;
@@ -66,6 +65,8 @@ var gameView = {
 	setCellDimensions: function(width, height) {
 		$('.cell').css('width', width);
 		$('.cell').css('height', height);
+		// Keeps text vertically centered (note: will only work with one line of text)
+		$('.cell').css('line-height', $('.cell').css('height'));
 	}
 };
 

@@ -1,3 +1,10 @@
+body {
+	/* Used to prevent text being selected */
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+}
+
 body > p {
 	font-size: 20px;
 	font-weight: bold;
@@ -13,14 +20,23 @@ body > p {
 .cell {
 	/* tiny.cc/clr for colours */
 	display: inline-block;
+	/* Default but subject to change by JS */
 	width: 3em;
 	height: 3em;
 
 	/* For aligning text */
-	line-height: 5em;
 	text-align: center;
 
-	/* Debug */
-	background: red;
-	border: 2px solid black;	
+	background: #8096F2;	
+	font-size: 2em;
+	font-family: 'Arimo', sans-serif;
+	border: 1px solid black;
+
+
+}
+
+.cell:hover {
+	opacity: 0.9;
+	background: #5C77E7;
+	cursor: pointer;
 }
