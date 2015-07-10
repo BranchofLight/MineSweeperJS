@@ -37,8 +37,12 @@ body > p {
 }
 
 .cell:hover {
-	opacity: 0.5;
 	cursor: pointer;
+}
+
+/* Allows only certain cells to change on hover */
+.cell.hasHover:hover {
+	opacity: 0.5;
 }
 
 .cell:active {

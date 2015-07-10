@@ -34,7 +34,8 @@ var gameView = {
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
-				html += "<div class=\"cell\" ";
+				// Can be hovered on by default
+				html += "<div class=\"cell hasHover\" ";
 				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
 				html += gameField.getCell(i, j).getShownValue();
 				html += "</div>";
@@ -91,13 +92,16 @@ var gameView = {
 	 */
 	setBorders: function() {
 		$('.cell').each(function() {
+			// All cells have a top and left border
 			$(this).css('border-left', '1px solid black');
 			$(this).css('border-top', '1px solid black');
 
+			// Last column cells have right borders
 			if ($(this).data('col') === gameField.getColumns()-1) {
 				$(this).css('border-right', '1px solid black');
 			}
 
+			// Last row cells have bottom borders
 			if ($(this).data('row') === gameField.getRows()-1) {
 				$(this).css('border-bottom', '1px solid black');
 			}

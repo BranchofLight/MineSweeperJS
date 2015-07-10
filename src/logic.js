@@ -118,6 +118,8 @@ var listeners = {
 			var location = [$(this).data('row'), $(this).data('col')];
 			var clickedCell = gameField.getCell(location[0], location[1]);
 			clickedCell.setIsChecked(true);
+      $(this).removeClass('hasHover');
+      $(this).css('background', '#D0D6E2');
 			gameView.refreshCell(clickedCell);
 		});
 	}
