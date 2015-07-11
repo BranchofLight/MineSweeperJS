@@ -13,6 +13,17 @@ body > p {
 	color: blue;
 }
 
+#header {
+	font-family: 'Arimo', sans-serif;
+	width: 60%;
+	margin: auto;
+}
+
+#timer {
+	color: #724580;
+	/* font-size is scaled with JS */
+}
+
 #game-field {
 	font-weight: bold;
 	width: 60%;
@@ -46,6 +57,6 @@ body > p {
 }
 
 .cell:active {
-	opacity: 1;
-	background: #6F7EAA;
+	opacity: 0.5;
+	background: #C2A265;
 }

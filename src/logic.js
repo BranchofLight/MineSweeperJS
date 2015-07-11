@@ -4,10 +4,21 @@
  */
 
  /**
+  * Sets up any variables needing defaults
+  * Note: should be called before anything else
+  */
+ var setup = function() {
+   // Set timer to 30 seconds
+   timer.setTimeLeft(30000);
+   /* Placeholder until something else triggers the timer's start */
+   timer.startTimer(1000);
+ };
+
+ /**
   * Returns a blank cell value
   * @return {String} ' '
   */
- var blank = function() {
+var blank = function() {
  	return '-';
 };
 
@@ -105,11 +116,12 @@ var cell = function(r, c, val) {
 	};
 };
 
-/**
- * Holds all listeners needed
- * . outside objects for the game
- * (can be activated anywhere)
- */
+ /**
+  * Name: listeners
+  * Purpose: Holds all listeners needed
+  * . outside objects for the game
+  * (can be activated anywhere)
+  */
 var listeners = {
 	click: function() {
     // Calling 'on' on #main-container makes sure it will work
@@ -124,3 +136,56 @@ var listeners = {
 		});
 	}
 };
+
+/**
+ * Name: timer
+ * Purpose: Works as a timer for the timer display
+ */
+var timer = function() {
+  var timeLeft = 0;
+
+  return {
+    /**
+     * Sets the time for the timer (in ms)
+     * @param {Number} t
+     */
+    setTimeLeft: function(t) {
+      timeLeft = (typeof t === "number") ? t : timeLeft;
+    },
+    getTimeLeft: function() {
+      return (timeLeft > 0) ? timeLeft : 0;
+    },
+    getTimeLeftSeconds: function() {
+      var timeInSeconds = parseInt(timeLeft/1000);
+      return (timeInSeconds > 0) ? timeInSeconds : 0;
+    },
+    /**
+     * Decrements the time left
+     * @param {Number} leap
+     */
+    decrementTimeLeft: function(leap) {
+      timeLeft -= (typeof leap === "number") ? leap : 0;
+    },
+    /**
+     * Starts the timer
+     * @param {Number} leap
+     */
+    startTimer: function(leap) {
+      var that = this;
+      // {Function} counter will be used till timeLeft reaches 0
+      var counter = function() {
+        setTimeout(function() {
+          // Decrement timer and refresh view
+          that.decrementTimeLeft(leap);
+          gameView.refreshTimer();
+          // Start again if there is time left
+          if (timer.getTimeLeft() > 0)
+            counter();
+        }, leap);
+      };
+
+      // Call to start the "loop"
+      counter();
+    }
+  };
+}();

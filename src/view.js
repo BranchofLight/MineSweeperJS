@@ -25,11 +25,32 @@ var gameView = {
 		console.log(strField);
 	},
 	/**
+	 * Displays HTML/CSS field and header
+	 */
+	displayGameView: function() {
+		this.displayHeader();
+		this.displayField();
+	},
+	/**
+	 * Displays header
+	 */
+	displayHeader: function() {
+		var html = "<div id=\"header\">";
+		html += "<div id=\"timer\">";
+		html += "<p>Time Left: " + timer.getTimeLeftSeconds() + "</p>";
+		// Closes div id=timer
+		html += "</div>";
+		// Closes div id=header
+		html += "</div>";
+
+		$('#main-container').append(html);
+	},
+	/**
 	 * Displays HTML/CSS field
 	 */
 	displayField: function() {
 		html = "<div id=\"game-field\"></div>";
-		$('#main-container').html(html);
+		$('#main-container').append(html);
 
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
@@ -44,7 +65,7 @@ var gameView = {
 			html += "<br />";
 		}
 
-		$('#game-field').html(html);
+		$('#game-field').append(html);
 		this.setBorders();
 		this.setCellDimensions();
 
@@ -84,8 +105,12 @@ var gameView = {
 		$('.cell').css('line-height', $('.cell').css('height'));
 		// Give 50% of the cell to text
 		$('.cell').css('font-size', cellDimension*0.5);
+		// Give 40% of a cell's dimension to timer's font (just for scaling)
+		$('#timer').css('font-size', cellDimension*0.4);
 		// Sets new width giving 10% extra for borders, etc
 		$('#game-field').css('width', (cellDimension*gameField.getColumns()*1.1));
+		// Sets the header width to the width of the game field
+		$('#header').css('width', $('#game-field').css('width'));
 	},
 	/**
 	 * Sets borders for all cells to prevent overlap
@@ -106,6 +131,14 @@ var gameView = {
 				$(this).css('border-bottom', '1px solid black');
 			}
 		});
+	},
+	/**
+	 * Refreshes the timer's view
+	 */
+	refreshTimer: function() {
+		// First get all digits and replace them with the new value
+		// Then replace the HTML with the new HTML
+		$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
 	}
 };
 
