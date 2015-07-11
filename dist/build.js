@@ -120,9 +120,9 @@ var gameField = function () {
 				// New array (row)
 				field.push([]);
 				for (var j = 0; j < columns; j++) {
+          var foundMine = false;
           // Loop through mine locations to see if there are any matches
           for (var x = 0; x < mineLocations.length; x++) {
-            var foundMine = false;
             // If loop is at a mine location
             if (mineLocations[x][0] === i && mineLocations[x][1] === j) {
               foundMine = true;
