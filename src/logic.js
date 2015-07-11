@@ -101,12 +101,22 @@ var gameField = function () {
 				// New array (row)
 				field.push([]);
 				for (var j = 0; j < columns; j++) {
-          // If loop is at a mine location
-          if (mineLocations.indexOf(i+j) > -1) {
-            field[i].push(cell(i, j, this.getMine()));
-          } else {
-            field[i].push(cell(i, j, blank()));
+          // Loop through mine locations to see if there are any matches
+          for (var x = 0; x < mineLocations.length; x++) {
+            var foundMine = false;
+            // If loop is at a mine location
+            if (mineLocations[x][0] === i && mineLocations[x][1] === j) {
+              foundMine = true;
+              /* Note: look into deleting a location after
+                 the mine has been placed */
+              // Leave loop, we found a mine
+              break;
+            }
           }
+          if (!foundMine)
+            field[i].push(cell(i, j, blank()));
+          else
+            field[i].push(cell(i, j, this.getMine()));
 				}
 			}
 		},
@@ -118,11 +128,26 @@ var gameField = function () {
 		 */
     generateMineLocations: function() {
       var arr = [];
-      var randLocation = 0;
+      var randRow = 0;
+      var randCol = 0;
       while (totalMines > arr.length) {
-        randLocation = Math.floor(Math.random() * (rows*columns));
-        if (arr.indexOf(randLocation) < 0)
-          arr.push(randLocation);
+        randRow = Math.floor(Math.random() * (rows));
+        randCol = Math.floor(Math.random() * (columns));
+
+        // Check all pairs for duplicates
+        for (var i = 0; i < arr.length; i++) {
+          var rowValue = arr[i][0];
+          var colValue = arr[i][1];
+          if (rowValue === randRow && colValue === randCol)
+          {
+            // Get a new random pair and restart loop
+            randRow = Math.floor(Math.random() * (rows));
+            randCol = Math.floor(Math.random() * (columns));
+            i = 0;
+          }
+        }
+
+        arr.push([randRow, randCol]);
       }
 
       return arr;
@@ -189,7 +214,7 @@ var listeners = {
       $(this).css('background', '#D0D6E2');
       if (clickedCell.getShownValue() === gameField.getMine())
         gameView.refreshMinesLeft();
-        
+
 			gameView.refreshCell(clickedCell);
 		});
 	}
