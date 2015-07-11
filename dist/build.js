@@ -6,14 +6,11 @@ $(document).ready(function() {
 	console.log("Hello World!");
 
 	setup();
-	gameField.generateField(9, 9);
+
 	console.log("rows: " + gameField.rows);
 	console.log("columns: " + gameField.columns);
 	console.log("Field: ");
 	gameView.displayTextField();
-
-	gameView.displayHeader();
-	gameView.displayField();
 
 	// Activate listeners
 	for (var prop in listeners)
@@ -30,10 +27,20 @@ $(document).ready(function() {
   * Note: should be called before anything else
   */
  var setup = function() {
+   /* Placeholder until something else sets mine amount */
+   gameField.setTotalMines(10);
+   /* Placeholder until something else triggers the field generation */
+   gameField.generateField(9, 9);
+
    // Set timer to 30 seconds
    timer.setTimeLeft(30000);
    /* Placeholder until something else triggers the timer's start */
+   // Makes the timer count down by 1 second each second
+   // {Number} leap is both the refresh rate and decrement amount
    timer.startTimer(1000);
+
+   // Display all views
+   gameView.displayGameView();
  };
 
  /**
@@ -54,9 +61,15 @@ var gameField = function () {
 	var rows = 0;
 	var columns = 0;
 	var field = [];
+  var minesLeft = 0;
+  var totalMines = 0;
 
 	/* Object Literal */
 	return {
+    // Sets the total number of mines on the grid
+    setTotalMines: function(m) {
+      totalMines = m;
+    },
 		// Returns columns
 		getColumns: function() {
 			return columns;
@@ -85,15 +98,33 @@ var gameField = function () {
 			// Set new values
 			rows = (typeof r === "number") ? r : 0;
 			columns = (typeof c === "number") ? c : 0;
+      // Get mine locations
+      var mineLocations = this.generateMineLocations();
 			// Push new field onto field
 			for (var i = 0; i < rows; i++) {
 				// New array (row)
 				field.push([]);
 				for (var j = 0; j < columns; j++) {
-					field[i].push(cell(i, j, this.getMine()));
+          // If loop is at a mine location
+          if (mineLocations.indexOf(i+j) > -1) {
+            field[i].push(cell(i, j, this.getMine()));
+          } else {
+            field[i].push(cell(i, j, blank()));
+          }
 				}
 			}
-		}
+		},
+    generateMineLocations: function() {
+      var arr = [];
+      var randLocation = 0;
+      while (totalMines > arr.length) {
+        randLocation = Math.floor(Math.random() * (rows*columns));
+        if (arr.indexOf(randLocation) < 0)
+          arr.push(randLocation);
+      }
+
+      return arr;
+    }
 	};
 }();
 
