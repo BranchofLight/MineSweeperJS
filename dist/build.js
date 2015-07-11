@@ -61,14 +61,29 @@ var gameField = function () {
 	var rows = 0;
 	var columns = 0;
 	var field = [];
-  var minesLeft = 0;
   var totalMines = 0;
 
 	/* Object Literal */
 	return {
-    // Sets the total number of mines on the grid
+    // Sets the total number of mines on the field
     setTotalMines: function(m) {
       totalMines = m;
+    },
+    /**
+     * Gets mines left on field
+     * @return {Number} minesLeft
+     */
+    getMinesLeft: function() {
+      var minesFound = 0;
+      for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < columns; j++) {
+          if (field[i][j].getShownValue() === this.getMine()) {
+            minesFound += 1;
+          }
+        }
+      }
+
+      return totalMines - minesFound;
     },
 		// Returns columns
 		getColumns: function() {
@@ -114,6 +129,12 @@ var gameField = function () {
 				}
 			}
 		},
+    /**
+		 * Returns an array of mine locations
+     * Array is based on 0...rows*columns
+     * . or i+j in generateField()
+		 * @return {Array} arr
+		 */
     generateMineLocations: function() {
       var arr = [];
       var randLocation = 0;
@@ -185,6 +206,9 @@ var listeners = {
 			clickedCell.setIsChecked(true);
       $(this).removeClass('hasHover');
       $(this).css('background', '#D0D6E2');
+      if (clickedCell.getShownValue() === gameField.getMine())
+        gameView.refreshMinesLeft();
+        
 			gameView.refreshCell(clickedCell);
 		});
 	}
@@ -285,6 +309,12 @@ var gameView = {
 		html += "<p>Time Left: " + timer.getTimeLeftSeconds() + "</p>";
 		// Closes div id=timer
 		html += "</div>";
+
+		html += "<div id=\"mines-left\">";
+		html += "<p>Mines Left: " + gameField.getMinesLeft() + "</p>";
+		// Closes div id=mines-left
+		html += "</div>";
+
 		// Closes div id=header
 		html += "</div>";
 
@@ -352,8 +382,11 @@ var gameView = {
 		$('.cell').css('font-size', cellDimension*0.5);
 		// Give 40% of a cell's dimension to timer's font (just for scaling)
 		$('#timer').css('font-size', cellDimension*0.4);
-		// Sets new width giving 10% extra for borders, etc
-		$('#game-field').css('width', (cellDimension*gameField.getColumns()*1.1));
+		$('#mines-left').css('font-size', cellDimension*0.4);
+		// Sets new width giving it 1 extra pixel for each column (border) + 1 extra
+		// . for far right cell which has a border on the left and right - all borders
+		// . are 1 pixel as of writing this comment
+		$('#game-field').css('width', (cellDimension*gameField.getColumns()+gameField.getColumns()+1));
 		// Sets the header width to the width of the game field
 		$('#header').css('width', $('#game-field').css('width'));
 	},
@@ -384,6 +417,12 @@ var gameView = {
 		// First get all digits and replace them with the new value
 		// Then replace the HTML with the new HTML
 		$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
+	},
+	/**
+	 * Refreshes mine's left on the view
+	 */
+	refreshMinesLeft: function() {
+		$('#mines-left').html($('#mines-left').html().replace(/\d+/g, gameField.getMinesLeft()));
 	}
 };
 

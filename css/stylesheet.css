@@ -13,6 +13,9 @@ body > p {
 	color: blue;
 }
 
+#main-container {
+}
+
 #header {
 	font-family: 'Arimo', sans-serif;
 	width: 60%;
@@ -20,11 +23,19 @@ body > p {
 }
 
 #timer {
+	float: left;
+	color: #724580;
+	/* font-size is scaled with JS */
+}
+
+#mines-left {
+	float: right;
 	color: #724580;
 	/* font-size is scaled with JS */
 }
 
 #game-field {
+	clear: both;
 	font-weight: bold;
 	width: 60%;
 	margin: auto;

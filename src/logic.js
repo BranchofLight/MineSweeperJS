@@ -42,14 +42,29 @@ var gameField = function () {
 	var rows = 0;
 	var columns = 0;
 	var field = [];
-  var minesLeft = 0;
   var totalMines = 0;
 
 	/* Object Literal */
 	return {
-    // Sets the total number of mines on the grid
+    // Sets the total number of mines on the field
     setTotalMines: function(m) {
       totalMines = m;
+    },
+    /**
+     * Gets mines left on field
+     * @return {Number} minesLeft
+     */
+    getMinesLeft: function() {
+      var minesFound = 0;
+      for (var i = 0; i < rows; i++) {
+        for (var j = 0; j < columns; j++) {
+          if (field[i][j].getShownValue() === this.getMine()) {
+            minesFound += 1;
+          }
+        }
+      }
+
+      return totalMines - minesFound;
     },
 		// Returns columns
 		getColumns: function() {
@@ -95,6 +110,12 @@ var gameField = function () {
 				}
 			}
 		},
+    /**
+		 * Returns an array of mine locations
+     * Array is based on 0...rows*columns
+     * . or i+j in generateField()
+		 * @return {Array} arr
+		 */
     generateMineLocations: function() {
       var arr = [];
       var randLocation = 0;
@@ -166,6 +187,9 @@ var listeners = {
 			clickedCell.setIsChecked(true);
       $(this).removeClass('hasHover');
       $(this).css('background', '#D0D6E2');
+      if (clickedCell.getShownValue() === gameField.getMine())
+        gameView.refreshMinesLeft();
+        
 			gameView.refreshCell(clickedCell);
 		});
 	}

@@ -40,6 +40,12 @@ var gameView = {
 		html += "<p>Time Left: " + timer.getTimeLeftSeconds() + "</p>";
 		// Closes div id=timer
 		html += "</div>";
+
+		html += "<div id=\"mines-left\">";
+		html += "<p>Mines Left: " + gameField.getMinesLeft() + "</p>";
+		// Closes div id=mines-left
+		html += "</div>";
+
 		// Closes div id=header
 		html += "</div>";
 
@@ -107,8 +113,11 @@ var gameView = {
 		$('.cell').css('font-size', cellDimension*0.5);
 		// Give 40% of a cell's dimension to timer's font (just for scaling)
 		$('#timer').css('font-size', cellDimension*0.4);
-		// Sets new width giving 10% extra for borders, etc
-		$('#game-field').css('width', (cellDimension*gameField.getColumns()*1.1));
+		$('#mines-left').css('font-size', cellDimension*0.4);
+		// Sets new width giving it 1 extra pixel for each column (border) + 1 extra
+		// . for far right cell which has a border on the left and right - all borders
+		// . are 1 pixel as of writing this comment
+		$('#game-field').css('width', (cellDimension*gameField.getColumns()+gameField.getColumns()+1));
 		// Sets the header width to the width of the game field
 		$('#header').css('width', $('#game-field').css('width'));
 	},
@@ -139,6 +148,12 @@ var gameView = {
 		// First get all digits and replace them with the new value
 		// Then replace the HTML with the new HTML
 		$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
+	},
+	/**
+	 * Refreshes mine's left on the view
+	 */
+	refreshMinesLeft: function() {
+		$('#mines-left').html($('#mines-left').html().replace(/\d+/g, gameField.getMinesLeft()));
 	}
 };
 
