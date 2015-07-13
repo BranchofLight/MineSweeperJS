@@ -10,7 +10,7 @@ module.exports = function(grunt) {
       dist: {
         src: ['src/*.js'],
         dest: 'dist/build.js',
-      },      
+      },
     },
     watch: {
       files: ['src/*.js'],
@@ -30,7 +30,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Default task(s).
-  grunt.registerTask('default', ['concat', 'jshint']);
+  grunt.registerTask('default', ['jshint', 'concat']);
   // Non-default task(s)
   grunt.registerTask('wat', ['watch']);
+  grunt.registerTask('lint', ['jshint']);
+  grunt.registerTask('cat', ['concat']);
 };

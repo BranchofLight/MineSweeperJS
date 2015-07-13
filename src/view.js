@@ -53,6 +53,8 @@ var gameView = {
 	},
 	/**
 	 * Displays HTML/CSS field
+	 * Intended for first display only
+	 * Refresh functions should be used afterwards
 	 */
 	displayField: function() {
 		html = "<div id=\"game-field\"></div>";
@@ -62,7 +64,7 @@ var gameView = {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
 				// Can be hovered on by default
-				html += "<div class=\"cell hasHover\" ";
+				html += "<div class=\"cell notClicked\" ";
 				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
 				html += gameField.getCell(i, j).getShownValue();
 				html += "</div>";
@@ -86,9 +88,31 @@ var gameView = {
 	 */
 	refreshCell: function(cellToRefresh) {
 		$('.cell').each(function() {
+			// Find HTML representation of cell
 			if ($(this).data('row') === cellToRefresh.getRow() &&
 			    $(this).data('col') === cellToRefresh.getCol()) {
 						$(this).html(cellToRefresh.getShownValue());
+					}
+		});
+	},
+	/**
+	 * Refreshes the HTML/CSS class of the cell
+	 * . to the approriate one
+	 * @param {Object} cellToRefresh
+	 */
+	refreshCellClass: function(cellToRefresh) {
+		$('.cell').each(function() {
+			// Find HTML representation of cell
+			if ($(this).data('row') === cellToRefresh.getRow() &&
+			    $(this).data('col') === cellToRefresh.getCol()) {
+						if (cellToRefresh.getIsClicked()) {
+							$(this).removeClass('notClicked');
+							$(this).addClass('clicked');
+						}
+						else {
+							$(this).removeClass('clicked');
+							$(this).addClass('notClicked');
+						}
 					}
 		});
 	},

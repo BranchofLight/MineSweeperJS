@@ -58,16 +58,21 @@ body > p {
 	/* border: 1px solid black; */
 }
 
-.cell:hover {
-	cursor: pointer;
+.cell.clicked:hover {
+	cursor: default;
+}
+
+.cell.clicked {
+	background: #D0D6E2;
 }
 
 /* Allows only certain cells to change on hover */
-.cell.hasHover:hover {
+.cell.notClicked:hover {
+	cursor: pointer;
 	opacity: 0.5;
 }
 
-.cell:active {
+.cell.notClicked:active {
 	opacity: 0.5;
-	background: #C2A265;
+	background: #FFFDCD;
 }

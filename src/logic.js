@@ -168,7 +168,7 @@ var cell = function(r, c, val) {
 	var row = (typeof r === "number") ? r : 0;
 	var col = (typeof c === "number") ? c : 0;
 	var value = val || undefined;
-	var isChecked = false;
+	var isClicked = false;
 
 	/* Object Literal */
 	return {
@@ -185,13 +185,13 @@ var cell = function(r, c, val) {
 		},
 		// Returns the value shown to the player
 		getShownValue: function() {
-			return (isChecked) ? value : blank();
+			return (isClicked) ? value : blank();
 		},
-		getIsChecked: function() {
-			return isChecked;
+		getIsClicked: function() {
+			return isClicked;
 		},
-		setIsChecked: function(val) {
-			isChecked = (typeof val === "boolean") ? val : false;
+		setIsClicked: function(val) {
+			isClicked = (typeof val === "boolean") ? val : false;
 		}
 	};
 };
@@ -209,13 +209,13 @@ var listeners = {
 		$('#main-container').on('click', '.cell', function() {
 			var location = [$(this).data('row'), $(this).data('col')];
 			var clickedCell = gameField.getCell(location[0], location[1]);
-			clickedCell.setIsChecked(true);
-      $(this).removeClass('hasHover');
-      $(this).css('background', '#D0D6E2');
+			clickedCell.setIsClicked(true);
+      //$(this).css('background', '#D0D6E2');
       if (clickedCell.getShownValue() === gameField.getMine())
         gameView.refreshMinesLeft();
 
 			gameView.refreshCell(clickedCell);
+      gameView.refreshCellClass(clickedCell);
 		});
 	}
 };
