@@ -5,6 +5,7 @@ body {
 	-ms-user-select: none; /* IE10+ */
 
 	background: #C4C9D4;
+	cursor: default;
 }
 
 body > p {
