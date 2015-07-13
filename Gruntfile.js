@@ -17,6 +17,7 @@ module.exports = function(grunt) {
       tasks: ['concat'],
     },
     jshint: {
+      src: ['Gruntfile.js'],
       beforeconcat: ['src/*.js'],
       afterconcat: ['dist/build.js'],
     }

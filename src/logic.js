@@ -256,7 +256,7 @@ var timer = function() {
      */
     incrementTimeLeft: function(leap) {
       timeLeft += (typeof leap === "number") ? leap : 0;
-    }
+    },
     /**
      * Starts the timer
      * @param {Number} leap
@@ -265,7 +265,7 @@ var timer = function() {
     startTimer: function(leap, shouldInc) {
       var that = this;
       // Default to decrementing
-      shouldInc = (typeof === "boolean") ? shouldInc : false;
+      shouldInc = (typeof shouldInc === "boolean") ? shouldInc : false;
       // {Function} counter will be used till timeLeft reaches 0
       var counter = function() {
         setTimeout(function() {
