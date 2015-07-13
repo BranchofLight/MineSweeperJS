@@ -45,10 +45,10 @@ $(document).ready(function() {
 
  /**
   * Returns a blank cell value
-  * @return {String} '-'
+  * @return {String} ' '
   */
 var blank = function() {
- 	return '-';
+ 	return ' ';
 };
 
  /**
@@ -321,7 +321,6 @@ var timer = function() {
  */
 var gameView = function() {
 	/* Private Functions */
-
 	/**
 	 * Displays header
 	 */

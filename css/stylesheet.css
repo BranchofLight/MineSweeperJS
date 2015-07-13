@@ -48,6 +48,7 @@ body * {
 
 	/* For aligning text */
 	text-align: center;
+	vertical-align: bottom;
 
 	background: #6F7E9D;
 	font-size: 2em;

@@ -10,7 +10,6 @@
  */
 var gameView = function() {
 	/* Private Functions */
-
 	/**
 	 * Displays header
 	 */
