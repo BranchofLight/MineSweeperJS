@@ -357,10 +357,10 @@ var gameView = {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
 				// Can be hovered on by default
-				html += "<div class=\"cell notClicked\" ";
-				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
+				html += "<div class=\"cell not-clicked\" ";
+				html += "data-row=\"" + i + "\" data-col=\"" + j + "\"><p>";
 				html += gameField.getCell(i, j).getShownValue();
-				html += "</div>";
+				html += "</p></div>";
 			}
 
 			html += "<br />";
@@ -399,12 +399,12 @@ var gameView = {
 			if ($(this).data('row') === cellToRefresh.getRow() &&
 			    $(this).data('col') === cellToRefresh.getCol()) {
 						if (cellToRefresh.getIsClicked()) {
-							$(this).removeClass('notClicked');
+							$(this).removeClass('not-clicked');
 							$(this).addClass('clicked');
 						}
 						else {
 							$(this).removeClass('clicked');
-							$(this).addClass('notClicked');
+							$(this).addClass('not-clicked');
 						}
 					}
 		});
