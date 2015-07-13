@@ -18,7 +18,7 @@ module.exports = function(grunt) {
     },
     jshint: {
       beforeconcat: ['src/*.js'],
-      afterconcat: ['dist/build.js']
+      afterconcat: ['dist/build.js'],
     }
   });
 
@@ -30,7 +30,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'concat']);
+  grunt.registerTask('default', ['concat', 'jshint']);
   // Non-default task(s)
   grunt.registerTask('wat', ['watch']);
   grunt.registerTask('lint', ['jshint']);

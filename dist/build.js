@@ -33,7 +33,7 @@ $(document).ready(function() {
    gameField.generateField(9, 9);
 
    // Set timer to 30 seconds
-   timer.setTimeLeft(30000);
+   timer.setTimeLeft(30000, true);
    /* Placeholder until something else triggers the timer's start */
    // Makes the timer count down by 1 second each second
    // {Number} leap is both the refresh rate and decrement amount
@@ -268,16 +268,34 @@ var timer = function() {
       timeLeft -= (typeof leap === "number") ? leap : 0;
     },
     /**
-     * Starts the timer
+     * Increments the time left
+     * Careful, as there's no ceiling to stop
+     * . infinite incrementation
      * @param {Number} leap
      */
-    startTimer: function(leap) {
+    incrementTimeLeft: function(leap) {
+      timeLeft += (typeof leap === "number") ? leap : 0;
+    }
+    /**
+     * Starts the timer
+     * @param {Number} leap
+     * @param {Boolean} shouldInc
+     */
+    startTimer: function(leap, shouldInc) {
       var that = this;
+      // Default to decrementing
+      shouldInc = (typeof === "boolean") ? shouldInc : false;
       // {Function} counter will be used till timeLeft reaches 0
       var counter = function() {
         setTimeout(function() {
-          // Decrement timer and refresh view
-          that.decrementTimeLeft(leap);
+          // Decrement or increment timer
+          if (shouldInc) {
+            that.decrementTimeLeft(leap);
+          }
+          else {
+            that.incrementTimeLeft(leap);
+          }
+          // Refresh view
           gameView.refreshTimer();
           // Start again if there is time left
           if (timer.getTimeLeft() > 0)
