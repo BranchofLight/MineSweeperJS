@@ -8,33 +8,13 @@
  * Purpose: Contains everything necessary
  * . to work with the game view
  */
-var gameView = {
-	/**
-	 * Displays field as text
-	 */
-	displayTextField: function() {
-		strField = "";
-		for (var i = 0; i < gameField.getRows(); i++) {
-			for (var j = 0; j < gameField.getColumns(); j++)
-			{
-				strField += gameField.getCell(i, j).getShownValue();
-			}
-			strField += "\n";
-		}
+var gameView = function() {
+	/* Private Functions */
 
-		console.log(strField);
-	},
-	/**
-	 * Displays HTML/CSS field and header
-	 */
-	displayGameView: function() {
-		this.displayHeader();
-		this.displayField();
-	},
 	/**
 	 * Displays header
 	 */
-	displayHeader: function() {
+	var displayHeader = function() {
 		var html = "<div id=\"header\">";
 		html += "<div id=\"timer\">";
 		html += "<p>Time Left: " + timer.getTimeLeftSeconds() + "</p>";
@@ -50,13 +30,14 @@ var gameView = {
 		html += "</div>";
 
 		$('#main-container').append(html);
-	},
+	};
+
 	/**
 	 * Displays HTML/CSS field
 	 * Intended for first display only
 	 * Refresh functions should be used afterwards
 	 */
-	displayField: function() {
+	var displayField = function() {
 		html = "<div id=\"game-field\"></div>";
 		$('#main-container').append(html);
 
@@ -74,52 +55,40 @@ var gameView = {
 		}
 
 		$('#game-field').append(html);
-		this.setBorders();
-		this.setCellDimensions();
+		setBorders();
+		setCellDimensions();
 
 		var that = this;
 		setResizeEvent(function() {
-			that.setCellDimensions();
+			setCellDimensions();
 		});
-	},
+	};
+
 	/**
-	 * Refreshes the view for the given cell
-	 * @param {Object} cellToRefresh
+	 * Sets borders for all cells to prevent overlap
 	 */
-	refreshCell: function(cellToRefresh) {
+	var	setBorders = function() {
 		$('.cell').each(function() {
-			// Find HTML representation of cell
-			if ($(this).data('row') === cellToRefresh.getRow() &&
-			    $(this).data('col') === cellToRefresh.getCol()) {
-						$(this).html(cellToRefresh.getShownValue());
-					}
+			// All cells have a top and left border
+			$(this).css('border-left', '1px solid black');
+			$(this).css('border-top', '1px solid black');
+
+			// Last column cells have right borders
+			if ($(this).data('col') === gameField.getColumns()-1) {
+				$(this).css('border-right', '1px solid black');
+			}
+
+			// Last row cells have bottom borders
+			if ($(this).data('row') === gameField.getRows()-1) {
+				$(this).css('border-bottom', '1px solid black');
+			}
 		});
-	},
-	/**
-	 * Refreshes the HTML/CSS class of the cell
-	 * . to the approriate one
-	 * @param {Object} cellToRefresh
-	 */
-	refreshCellClass: function(cellToRefresh) {
-		$('.cell').each(function() {
-			// Find HTML representation of cell
-			if ($(this).data('row') === cellToRefresh.getRow() &&
-			    $(this).data('col') === cellToRefresh.getCol()) {
-						if (cellToRefresh.getIsClicked()) {
-							$(this).removeClass('not-clicked');
-							$(this).addClass('clicked');
-						}
-						else {
-							$(this).removeClass('clicked');
-							$(this).addClass('not-clicked');
-						}
-					}
-		});
-	},
+	};
+
 	/**
 	 * Changes width and height of every cell
 	 */
-	setCellDimensions: function() {
+	var setCellDimensions = function() {
 		// Allocates 60% of the viewport width to gameField
 		var cellWidth = (($(window).width())*0.6 / gameField.getColumns());
 		// Allocates 75% of the viewport's height to gameField
@@ -143,42 +112,82 @@ var gameView = {
 		$('#game-field').css('width', (cellDimension*gameField.getColumns()+gameField.getColumns()+1));
 		// Sets the header width to the width of the game field
 		$('#header').css('width', $('#game-field').css('width'));
-	},
-	/**
-	 * Sets borders for all cells to prevent overlap
-	 */
-	setBorders: function() {
-		$('.cell').each(function() {
-			// All cells have a top and left border
-			$(this).css('border-left', '1px solid black');
-			$(this).css('border-top', '1px solid black');
+	};
 
-			// Last column cells have right borders
-			if ($(this).data('col') === gameField.getColumns()-1) {
-				$(this).css('border-right', '1px solid black');
+	/* Public Functions */
+	return {
+		/**
+		 * Displays field as text
+		 */
+		displayTextField: function() {
+			strField = "";
+			for (var i = 0; i < gameField.getRows(); i++) {
+				for (var j = 0; j < gameField.getColumns(); j++)
+				{
+					strField += gameField.getCell(i, j).getShownValue();
+				}
+				strField += "\n";
 			}
 
-			// Last row cells have bottom borders
-			if ($(this).data('row') === gameField.getRows()-1) {
-				$(this).css('border-bottom', '1px solid black');
-			}
-		});
-	},
-	/**
-	 * Refreshes the timer's view
-	 */
-	refreshTimer: function() {
-		// First get all digits and replace them with the new value
-		// Then replace the HTML with the new HTML
-		$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
-	},
-	/**
-	 * Refreshes mine's left on the view
-	 */
-	refreshMinesLeft: function() {
-		$('#mines-left').html($('#mines-left').html().replace(/\d+/g, gameField.getMinesLeft()));
-	}
-};
+			console.log(strField);
+		},
+		/**
+		 * Displays HTML/CSS field and header
+		 */
+		displayGameView: function() {
+			displayHeader();
+			displayField();
+		},
+		/**
+		 * Refreshes the view for the given cell
+		 * @param {Object} cellToRefresh
+		 */
+		refreshCell: function(cellToRefresh) {
+			$('.cell').each(function() {
+				// Find HTML representation of cell
+				if ($(this).data('row') === cellToRefresh.getRow() &&
+				    $(this).data('col') === cellToRefresh.getCol()) {
+							$(this).html(cellToRefresh.getShownValue());
+						}
+			});
+		},
+		/**
+		 * Refreshes the HTML/CSS class of the cell
+		 * . to the approriate one
+		 * @param {Object} cellToRefresh
+		 */
+		refreshCellClass: function(cellToRefresh) {
+			$('.cell').each(function() {
+				// Find HTML representation of cell
+				if ($(this).data('row') === cellToRefresh.getRow() &&
+				    $(this).data('col') === cellToRefresh.getCol()) {
+							if (cellToRefresh.getIsClicked()) {
+								$(this).removeClass('not-clicked');
+								$(this).addClass('clicked');
+							}
+							else {
+								$(this).removeClass('clicked');
+								$(this).addClass('not-clicked');
+							}
+						}
+			});
+		},
+		/**
+		 * Refreshes the timer's view
+		 */
+		refreshTimer: function() {
+			// First get all digits and replace them with the new value
+			// Then replace the HTML with the new HTML
+			$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
+		},
+		/**
+		 * Refreshes mine's left on the view
+		 */
+		refreshMinesLeft: function() {
+			$('#mines-left').html($('#mines-left').html().replace(/\d+/g, gameField.getMinesLeft()));
+		}
+	};
+}();
 
 /**
  * Changes resize event binding
