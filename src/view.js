@@ -120,9 +120,8 @@ var gameView = {
 	 * Changes width and height of every cell
 	 */
 	setCellDimensions: function() {
-		// Taking 90% ensures that there will be no overflowing rows
-		// Also multiply width by 0.6 to match default width of 60%
-		var cellWidth = (($(window).width())*0.6 / gameField.getColumns())*0.9;
+		// Allocates 60% of the viewport width to gameField
+		var cellWidth = (($(window).width())*0.6 / gameField.getColumns());
 		// Allocates 75% of the viewport's height to gameField
 		var cellHeight = ($(window).height() / gameField.getRows())*0.75;
 
