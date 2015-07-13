@@ -126,8 +126,9 @@ var gameField = function () {
             // If loop is at a mine location
             if (mineLocations[x][0] === i && mineLocations[x][1] === j) {
               foundMine = true;
-              /* Note: look into deleting a location after
-                 the mine has been placed */
+              // Remove element in hopes of gaining efficiency on large
+              // . arrays
+              mineLocations.splice(x, 1);
               // Leave loop, we found a mine
               break;
             }
@@ -141,8 +142,6 @@ var gameField = function () {
 		},
     /**
 		 * Returns an array of mine locations
-     * Array is based on 0...rows*columns
-     * . or i+j in generateField()
 		 * @return {Array} arr
 		 */
     generateMineLocations: function() {
