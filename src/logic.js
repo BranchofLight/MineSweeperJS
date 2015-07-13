@@ -26,7 +26,7 @@
 
  /**
   * Returns a blank cell value
-  * @return {String} ' '
+  * @return {String} '-'
   */
 var blank = function() {
  	return '-';
