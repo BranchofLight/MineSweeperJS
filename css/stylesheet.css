@@ -35,7 +35,7 @@ body * {
 	text-align: center;
 }
 
-#welcome h1 {
+#welcome h1, #end-game h1 {
 	color: #724580;
 	font-family: 'Arimo', sans-serif;
 	font-size: 2.5em;
@@ -51,7 +51,6 @@ body * {
 #diff-form label {
 	font-family: 'Arimo', sans-serif;
 	font-size: 1.25em;
-	margin: auto;
 }
 
 #diff-form #quick-play-button, #custom-play-button {
@@ -130,6 +129,20 @@ body * {
 
 .cell.flagged {
 	background: #9F3A44;
+}
+
+#end-game {
+	margin-top: 8%;
+	text-align: center;
+}
+
+#end-game p {
+	font-family: 'Arimo', sans-serif;
+	font-size: 1.25em;
+}
+
+.top-marg {
+	margin-top: 5%;
 }
 
 .center-button {

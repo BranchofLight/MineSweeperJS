@@ -9,6 +9,58 @@ var removeWelcomeView = function() {
 };
 
 /**
+ * Name: displayMainMenu
+ * Purpose: Will display the main menu on the screen
+ * Note: Does no HTML deletion so no <div> other than
+ * . main-container should be alive
+ */
+var displayMainMenu = function() {
+	var html = "<div id=\"welcome\">";
+	html += "<h1>Welcome to MineSweeper JS!</h1>";
+	html += "<h2>Quick Play</h2>";
+	html += "<form id=\"diff-form\">";
+	html += "<input type=\"radio\" name=\"difficulty\" id=\"beginner\" checked>";
+	html += "<label for=\"beginner\">Beginner</label><br>";
+	html += "<input type=\"radio\" name=\"difficulty\" id=\"intermediate\">";
+	html += "<label for=\"intermediate\">Intermediate</label><br>";
+	html += "<input type=\"radio\" name=\"difficulty\" id=\"expert\">";
+	html += "<label for=\"expert\">Expert</label><br>";
+	html += "<input type=\"radio\" name=\"difficulty\" id=\"impossible\">";
+	html += "<label for=\"impossible\">Impossible</label><br>";
+	html += "<button class=\"btn\" id=\"quick-play-button\">Play</button>";
+	html += "</form>";
+	html += "<h2>Custom Game</h2>";
+	html += "<p id=\"row-select\">Rows (between 4 and 30):</p>";
+	html += "<input type=\"text\" name=\"row-text\" size=\"2\" id=\"row-input\"><br><br>";
+	html += "<p id=\"col-select\">Columns (between 4 and 30):</p>";
+	html += "<input type=\"text\" name=\"col-text\" size=\"2\" id=\"col-input\"><br><br>";
+	html += "<p id=\"mines-select\">Mines (no more than 100% of cells):</p>";
+	html += "<input type=\"text\" name=\"mines-text\" size=\"2\" id=\"mines-input\"><br>";
+	html += "<button class=\"btn\" id=\"custom-play-button\">Play</button>";
+	html += "</div>";
+	$('#main-container').append(html);
+};
+
+/**
+ * Name: displayEndGame
+ * Purpose: Will display the end game on the screen
+ * Note: Does no HTML deletion so no <div> other than
+ * . main-container should be alive
+ * @param Will take a paramater for loss/win and time
+ */
+var displayEndGame = function() {
+	var html = "<div id=\"end-game\">";
+	html += "<h1>Congratulations! / Game Over</h1>";
+	html += "<p class=\"top-marg\">You won / lost in #time seconds</p>";
+	html += "<p>Play again?</p>";
+	html += "<button class=\"btn\">Play Same Setup</button>";
+	html += "<button class=\"btn\">Play New Setup</button>";
+	html += "</div>";
+
+	$('#main-container').append(html);
+};
+
+/**
  * Name: gameView
  * Purpose: Contains everything necessary
  * . to work with the game view
