@@ -5,13 +5,6 @@
 $(document).ready(function() {
 	console.log("Hello World!");
 
-	setup();
-
-	console.log("rows: " + gameField.rows);
-	console.log("columns: " + gameField.columns);
-	console.log("Field: ");
-	gameView.displayTextField();
-
 	// Activate listeners
 	for (var prop in listeners)
 		listeners[prop]();
@@ -26,14 +19,14 @@ $(document).ready(function() {
   * Sets up any variables needing defaults
   * Note: should be called before anything else
   */
- var setup = function() {
+ var gameSetup = function() {
    /* Placeholder until something else sets mine amount */
    gameField.setTotalMines(10);
    /* Placeholder until something else triggers the field generation */
    gameField.generateField(9, 9);
 
-   // Set timer to 30 seconds
-   timer.setTimeLeft(30000, true);
+   // Set timer to 0 seconds and to increment
+   timer.setTimeLeft(0, true);
    /* Placeholder until something else triggers the timer's start */
    // Makes the timer count down by 1 second each second
    // {Number} leap is both the refresh rate and decrement amount
@@ -70,20 +63,20 @@ var gameField = function () {
       totalMines = m;
     },
     /**
-     * Gets mines left on field
-     * @return {Number} minesLeft
+     * Gets flags left to place
+     * @return {Number} flagsLeft
      */
-    getMinesLeft: function() {
-      var minesFound = 0;
+    getFlagsLeft: function() {
+      var flagsFound = 0;
       for (var i = 0; i < rows; i++) {
         for (var j = 0; j < columns; j++) {
-          if (field[i][j].getShownValue() === this.getMine()) {
-            minesFound += 1;
+          if (field[i][j].getIsFlagged()) {
+            flagsFound += 1;
           }
         }
       }
 
-      return totalMines - minesFound;
+      return totalMines - flagsFound;
     },
 		// Returns columns
 		getColumns: function() {
@@ -187,6 +180,7 @@ var cell = function(r, c, val) {
 	var col = (typeof c === "number") ? c : 0;
 	var value = val || undefined;
 	var isClicked = false;
+  var isFlagged = false;
 
 	/* Object Literal */
 	return {
@@ -210,7 +204,13 @@ var cell = function(r, c, val) {
 		},
 		setIsClicked: function(val) {
 			isClicked = (typeof val === "boolean") ? val : false;
-		}
+		},
+    getIsFlagged: function() {
+      return isFlagged;
+    },
+    setIsFlagged: function(val) {
+      isFlagged = (typeof val === "boolean") ? val : false;
+    }
 	};
 };
 
@@ -222,18 +222,39 @@ var cell = function(r, c, val) {
   */
 var listeners = {
 	click: function() {
+    // Removes default menu even if no cell was clicked
+    document.oncontextmenu = function() {
+      return false;
+    };
+
     // Calling 'on' on #main-container makes sure it will work
     // even if no .cells are present on initialization
-		$('#main-container').on('click', '.cell', function() {
-			var location = [$(this).data('row'), $(this).data('col')];
-			var clickedCell = gameField.getCell(location[0], location[1]);
-			clickedCell.setIsClicked(true);
-      //$(this).css('background', '#D0D6E2');
-      if (clickedCell.getShownValue() === gameField.getMine())
-        gameView.refreshMinesLeft();
+		$('#main-container').on('mousedown', '.cell', function(event) {
+      // Get cell that was clicked for all events
+      var location = [$(this).data('row'), $(this).data('col')];
+      var clickedCell = gameField.getCell(location[0], location[1]);
 
-			gameView.refreshCell(clickedCell);
-      gameView.refreshCellClass(clickedCell);
+      // 0: left, 1: middle, 2: right
+      if (event.button === 0) {
+        if (clickedCell.getIsFlagged()) {
+          clickedCell.setIsFlagged(false);
+          gameView.setFlaggedClass(clickedCell, false);
+          gameView.refreshFlagsLeft();
+        }
+
+  			clickedCell.setIsClicked(true);
+
+  			gameView.refreshCell(clickedCell);
+        gameView.setClickedClass(clickedCell, true);
+
+      } else if (event.button == 2) {
+        // Only flag if cell has not been clicked
+        if (!clickedCell.getIsClicked()) {
+          clickedCell.setIsFlagged(true);
+          gameView.setFlaggedClass(clickedCell, true);
+          gameView.refreshFlagsLeft();
+        }
+      }
 		});
 	}
 };
@@ -314,8 +335,17 @@ var timer = function() {
  * Source:  src/view.js
  */
 
+ /**
+  * Name: welcomeView
+  * Purpose: Contains everything necessary
+  * . to work with the welcome view
+  */
+ var welcomeView = function() {
+
+ };
+
 /**
- * Name: GameView
+ * Name: gameView
  * Purpose: Contains everything necessary
  * . to work with the game view
  */
@@ -331,9 +361,9 @@ var gameView = function() {
 		// Closes div id=timer
 		html += "</div>";
 
-		html += "<div id=\"mines-left\">";
-		html += "<p>Mines Left: " + gameField.getMinesLeft() + "</p>";
-		// Closes div id=mines-left
+		html += "<div id=\"flags-left\">";
+		html += "<p>Flags Left: " + gameField.getFlagsLeft() + "</p>";
+		// Closes div id=flags-left
 		html += "</div>";
 
 		// Closes div id=header
@@ -350,15 +380,16 @@ var gameView = function() {
 	var displayField = function() {
 		html = "<div id=\"game-field\"></div>";
 		$('#main-container').append(html);
+		html = "";
 
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
 				// Can be hovered on by default
 				html += "<div class=\"cell not-clicked\" ";
-				html += "data-row=\"" + i + "\" data-col=\"" + j + "\"><p>";
+				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
 				html += gameField.getCell(i, j).getShownValue();
-				html += "</p></div>";
+				html += "</div>";
 			}
 
 			html += "<br />";
@@ -368,7 +399,6 @@ var gameView = function() {
 		setBorders();
 		setCellDimensions();
 
-		var that = this;
 		setResizeEvent(function() {
 			setCellDimensions();
 		});
@@ -378,50 +408,58 @@ var gameView = function() {
 	 * Sets borders for all cells to prevent overlap
 	 */
 	var	setBorders = function() {
+		var borderStyle = "1px solid black";
 		$('.cell').each(function() {
 			// All cells have a top and left border
-			$(this).css('border-left', '1px solid black');
-			$(this).css('border-top', '1px solid black');
+			$(this).css('border-left', borderStyle);
+			$(this).css('border-top', borderStyle);
 
 			// Last column cells have right borders
 			if ($(this).data('col') === gameField.getColumns()-1) {
-				$(this).css('border-right', '1px solid black');
+				$(this).css('border-right', borderStyle);
 			}
 
 			// Last row cells have bottom borders
 			if ($(this).data('row') === gameField.getRows()-1) {
-				$(this).css('border-bottom', '1px solid black');
+				$(this).css('border-bottom', borderStyle);
 			}
 		});
 	};
 
 	/**
-	 * Changes width and height of every cell
+	 * Calculates and sets width and height of every cell
 	 */
 	var setCellDimensions = function() {
-		// Allocates 60% of the viewport width to gameField
-		var cellWidth = (($(window).width())*0.6 / gameField.getColumns());
-		// Allocates 75% of the viewport's height to gameField
-		var cellHeight = ($(window).height() / gameField.getRows())*0.75;
+		// Give field width 60% and height 75%
+		var fieldWidth = 0.60 * $(window).width();
+		var fieldHeight = 0.75 * $(window).height();
 
-		// Use the smallest value (so it fits regardless)
-		var cellDimension = (cellWidth < cellHeight) ? cellWidth : cellHeight;
+		// Find the smaller of 2 to use as the dimension of each cell
+		var smaller = (fieldWidth < fieldHeight) ? fieldWidth : fieldHeight;
 
+		// Calculate smaller dimension and use it
+		var cellHeight = smaller/gameField.getRows();
+		var cellWidth = smaller/gameField.getColumns();
+		var cellDimension = (cellHeight < cellWidth) ? cellHeight : cellWidth;
+		// Floor it for an even number
+		cellDimension = Math.floor(cellDimension);
+
+		// Set CSS
 		$('.cell').css('width', cellDimension);
 		$('.cell').css('height', cellDimension);
-		// Keeps text vertically centered (note: will only work with one line of text)
-		$('.cell').css('line-height', $('.cell').css('height'));
-		// Give 50% of the cell to text
-		$('.cell').css('font-size', cellDimension*0.5);
-		// Give 40% of a cell's dimension to timer's font (just for scaling)
-		$('#timer').css('font-size', cellDimension*0.4);
-		$('#mines-left').css('font-size', cellDimension*0.4);
-		// Sets new width giving it 1 extra pixel for each column (border) + 1 extra
-		// . for far right cell which has a border on the left and right - all borders
-		// . are 1 pixel as of writing this comment
-		$('#game-field').css('width', (cellDimension*gameField.getColumns()+gameField.getColumns()+1));
-		// Sets the header width to the width of the game field
-		$('#header').css('width', $('#game-field').css('width'));
+		// Take up most of the cell with text
+		$('.cell').css('font-size', cellDimension*0.9);
+
+		// Calcualte new height and width
+		var newWidth = cellDimension*gameField.getColumns();
+		var newHeight = cellDimension*gameField.getRows();
+
+		// Set CSS
+		$('#game-field').css('width', newWidth);
+		$('#game-field').css('height', newHeight);
+		$('#header').css('width', newWidth);
+		// Scale to cells
+		$('#header').css('font-size', newWidth*0.05);
 	};
 
 	/* Public Functions */
@@ -450,6 +488,7 @@ var gameView = function() {
 		},
 		/**
 		 * Refreshes the view for the given cell
+		 * To be called if the shown value changes
 		 * @param {Object} cellToRefresh
 		 */
 		refreshCell: function(cellToRefresh) {
@@ -462,24 +501,48 @@ var gameView = function() {
 			});
 		},
 		/**
-		 * Refreshes the HTML/CSS class of the cell
-		 * . to the approriate one
+		 * Sets the HTML/CSS clicked class of the cell
+		 * . to either on or off
 		 * @param {Object} cellToRefresh
+		 * @param {Boolean} setToClicked
 		 */
-		refreshCellClass: function(cellToRefresh) {
+		setClickedClass: function(cellToRefresh, setToClicked) {
+			setToClicked =
+				(typeof setToClicked === "boolean") ? setToClicked : false;
+
 			$('.cell').each(function() {
 				// Find HTML representation of cell
 				if ($(this).data('row') === cellToRefresh.getRow() &&
 				    $(this).data('col') === cellToRefresh.getCol()) {
-							if (cellToRefresh.getIsClicked()) {
-								$(this).removeClass('not-clicked');
-								$(this).addClass('clicked');
-							}
-							else {
-								$(this).removeClass('clicked');
-								$(this).addClass('not-clicked');
-							}
-						}
+					if (setToClicked) {
+						$(this).removeClass('not-clicked');
+						$(this).addClass('clicked');
+					} else {
+						$(this).removeClass('clicked');
+						$(this).addClass('not-clicked');
+					}
+				}
+			});
+		},
+		/**
+		 * Either removes or adds the CSS flagged class
+		 * @param {Object} cellToRefresh
+		 * @param {Boolean} setToFlagged
+		 */
+		setFlaggedClass: function(cellToRefresh, setToFlagged) {
+			setToFlagged =
+				(typeof setToFlagged === "boolean") ? setToFlagged : false;
+
+			$('.cell').each(function() {
+				// Find HTML representation of cell
+				if ($(this).data('row') === cellToRefresh.getRow() &&
+				    $(this).data('col') === cellToRefresh.getCol()) {
+					if (setToFlagged) {
+						$(this).addClass('flagged');
+					} else {
+						$(this).removeClass('flagged');
+					}
+				}
 			});
 		},
 		/**
@@ -491,10 +554,10 @@ var gameView = function() {
 			$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
 		},
 		/**
-		 * Refreshes mine's left on the view
+		 * Refreshes flag's left on the view
 		 */
-		refreshMinesLeft: function() {
-			$('#mines-left').html($('#mines-left').html().replace(/\d+/g, gameField.getMinesLeft()));
+		refreshFlagsLeft: function() {
+			$('#flags-left').html($('#flags-left').html().replace(/-?\d+/g, gameField.getFlagsLeft()));
 		}
 	};
 }();

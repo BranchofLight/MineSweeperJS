@@ -1,3 +1,7 @@
+html {
+	height: 100%;
+}
+
 body {
 	/* Used to prevent text being selected */
 	-webkit-user-select: none; /* Chrome/Safari */
@@ -5,6 +9,11 @@ body {
 	-ms-user-select: none; /* IE10+ */
 
 	background: #C4C9D4;
+
+	height: 100%;
+	margin: auto;
+
+	overflow: hidden;
 }
 
 body * {
@@ -12,11 +21,57 @@ body * {
 }
 
 #main-container {
+	width: 100%;
+	height: 100%;
+}
+
+#welcome {
+	width: 50%;
+
+	margin-top: 5%;
+	margin-left: auto;
+	margin-right: auto;
+
+	text-align: center;
+}
+
+#welcome h1 {
+	font-family: 'Arimo', sans-serif;
+	font-size: 2.5em;
+}
+
+#welcome h2 {
+	font-family: 'Arimo', sans-serif;
+	font-size: 1.75em;
+	margin-top: 10%;
+}
+
+#diff-form label {
+	font-family: 'Arimo', sans-serif;
+	font-size: 1.25em;
+	margin: auto;
+}
+
+#diff-form #quick-play-button, #custom-play-button {
+	font-family: 'Arimo', sans-serif;
+	font-size: 1em;
+	margin-top: 2%;
+	cursor: pointer;
+}
+
+#row-select, #col-select, #mines-select {
+	display: inline;
+	font-family: 'Arimo', sans-serif;
+	font-size: 1em;
+}
+
+#row-input:hover, #col-input:hover {
+	cursor: text;
 }
 
 #header {
 	font-family: 'Arimo', sans-serif;
-	width: 60%;
+	height: 10%;
 	margin: auto;
 }
 
@@ -26,7 +81,7 @@ body * {
 	/* font-size is scaled with JS */
 }
 
-#mines-left {
+#flags-left {
 	float: right;
 	color: #724580;
 	/* font-size is scaled with JS */
@@ -35,39 +90,21 @@ body * {
 #game-field {
 	clear: both;
 	font-weight: bold;
-	width: 60%;
 	margin: auto;
 }
 
 .cell {
 	/* tiny.cc/clr for colours */
 	display: inline-block;
-	/* Default but subject to change by JS */
-	width: 3em;
-	height: 3em;
 
 	/* For aligning text */
 	text-align: center;
 	vertical-align: bottom;
+	box-sizing: border-box;
 
 	background: #6F7E9D;
-	font-size: 2em;
 	font-family: 'Arimo', sans-serif;
 	/* Borders are added with JS to prevent overlap */
-	/* border: 1px solid black; */
-}
-
-
-.cell * {
-	display: inline;
-}
-
-/* If the <div>s were empty formatting would be
- * ruined. Instead, a paragraph with a blank value
- * of '-' is used and set to invisible.
- */
-.cell.not-clicked p {
-	visibility: hidden;
 }
 
 .cell.clicked:hover {
@@ -87,4 +124,8 @@ body * {
 .cell.not-clicked:active {
 	opacity: 0.5;
 	background: #D0D6E2;
+}
+
+.cell.flagged {
+	background: #9F3A44;
 }
