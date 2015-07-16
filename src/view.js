@@ -3,14 +3,9 @@
  * Source:  src/view.js
  */
 
- /**
-  * Name: welcomeView
-  * Purpose: Contains everything necessary
-  * . to work with the welcome view
-  */
- var welcomeView = function() {
-
- };
+var removeWelcomeView = function() {
+	$('#welcome').remove();
+};
 
 /**
  * Name: gameView

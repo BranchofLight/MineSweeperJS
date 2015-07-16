@@ -238,9 +238,16 @@ var listeners = {
       } else if (event.button == 2) {
         // Only flag if cell has not been clicked
         if (!clickedCell.getIsClicked()) {
-          clickedCell.setIsFlagged(true);
-          gameView.setFlaggedClass(clickedCell, true);
-          gameView.refreshFlagsLeft();
+          // If flag is already flagged, unflag
+          if (clickedCell.getIsFlagged()) {
+            clickedCell.setIsFlagged(false);
+            gameView.setFlaggedClass(clickedCell, false);
+            gameView.refreshFlagsLeft();
+          } else {
+            clickedCell.setIsFlagged(true);
+            gameView.setFlaggedClass(clickedCell, true);
+            gameView.refreshFlagsLeft();
+          }
         }
       }
 		});
