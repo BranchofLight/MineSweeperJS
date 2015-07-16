@@ -5,6 +5,9 @@
 $(document).ready(function() {
 	console.log("Hello World!");
 
+	removeWelcomeView();
+	gameSetup();
+
 	// Activate listeners
 	for (var prop in listeners)
 		listeners[prop]();
@@ -250,9 +253,16 @@ var listeners = {
       } else if (event.button == 2) {
         // Only flag if cell has not been clicked
         if (!clickedCell.getIsClicked()) {
-          clickedCell.setIsFlagged(true);
-          gameView.setFlaggedClass(clickedCell, true);
-          gameView.refreshFlagsLeft();
+          // If flag is already flagged, unflag
+          if (clickedCell.getIsFlagged()) {
+            clickedCell.setIsFlagged(false);
+            gameView.setFlaggedClass(clickedCell, false);
+            gameView.refreshFlagsLeft();
+          } else {
+            clickedCell.setIsFlagged(true);
+            gameView.setFlaggedClass(clickedCell, true);
+            gameView.refreshFlagsLeft();
+          }
         }
       }
 		});
@@ -335,14 +345,9 @@ var timer = function() {
  * Source:  src/view.js
  */
 
- /**
-  * Name: welcomeView
-  * Purpose: Contains everything necessary
-  * . to work with the welcome view
-  */
- var welcomeView = function() {
-
- };
+var removeWelcomeView = function() {
+	$('#welcome').remove();
+};
 
 /**
  * Name: gameView
