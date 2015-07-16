@@ -5,9 +5,8 @@
 $(document).ready(function() {
 	console.log("Hello World!");
 
-	// removeWelcomeView();
-	// gameSetup();
-	displayMainMenu();
+	gameSetup();
+	// displayMainMenu();
 
 	// Activate listeners
 	for (var prop in listeners)

@@ -32,6 +32,14 @@ var blank = function() {
  	return ' ';
 };
 
+/**
+ * Returns a mine cell value
+ * @return {String} 'X'
+ */
+var mine = function() {
+  return 'X';
+};
+
  /**
   * Name: gameField
   * Purpose: Object holding all information
@@ -74,12 +82,6 @@ var gameField = function () {
 		getRows: function() {
 			return rows;
 		},
-		// Empty or not-clicked cell value
-		getBlank: blank(),
-		// Mine cell value
-		getMine: function() {
-			return 'X';
-		},
 		getCell: function(r, c) {
 			return field[r][c];
 		},
@@ -96,11 +98,13 @@ var gameField = function () {
 			columns = (typeof c === "number") ? c : 0;
       // Get mine locations
       var mineLocations = this.generateMineLocations();
+      // Create iterators early to be used multiple times
+      var i = 0, j = 0;
 			// Push new field onto field
-			for (var i = 0; i < rows; i++) {
+			for (i = 0; i < rows; i++) {
 				// New array (row)
 				field.push([]);
-				for (var j = 0; j < columns; j++) {
+				for (j = 0; j < columns; j++) {
           var foundMine = false;
           // Loop through mine locations to see if there are any matches
           for (var x = 0; x < mineLocations.length; x++) {
@@ -117,7 +121,22 @@ var gameField = function () {
           if (!foundMine)
             field[i].push(cell(i, j, blank()));
           else
-            field[i].push(cell(i, j, this.getMine()));
+            field[i].push(cell(i, j, mine()));
+				}
+			}
+      // With mines and cells generated, time to calculate and add numbers
+      for (i = 0; i < rows; i++) {
+				for (j = 0; j < columns; j++) {
+          // If the value is not a mine
+          if (field[i][j].getRealValue() !== mine()) {
+            // Calculate adjacent mines
+            var newVal = numOfAdjacentMines(field[i][j]);
+            // Make sure it isn't zero which will be blank!
+            if (newVal !== 0) {
+              // Set new value
+              field[i][j].setRealValue(newVal);
+            }
+          }
 				}
 			}
 		},
@@ -183,6 +202,9 @@ var cell = function(r, c, val) {
 		getRealValue: function() {
 			return value;
 		},
+    setRealValue: function(val) {
+      value = val | blank();
+    },
 		// Returns the value shown to the player
 		getShownValue: function() {
 			return (isClicked) ? value : blank();
@@ -200,6 +222,45 @@ var cell = function(r, c, val) {
       isFlagged = (typeof val === "boolean") ? val : false;
     }
 	};
+};
+
+/**
+ * Calculates and returns the number of
+ * . mines adjacent to a cell paramater
+ * @param {Object} cellToCheck
+ */
+var numOfAdjacentMines = function(cellToCheck) {
+  var r = cellToCheck.getRow();
+  var c = cellToCheck.getCol();
+
+  var numOfMines = 0;
+
+  // All locations to check
+  var adjacent = [
+    [r-1, c],
+    [r-1, c-1],
+    [r-1, c+1],
+    [r, c-1],
+    [r, c+1],
+    [r+1, c-1],
+    [r+1, c],
+    [r+1, c+1],
+  ];
+
+  for (var i = 0; i < adjacent.length; i++) {
+    var row = adjacent[i][0];
+    var col = adjacent[i][1];
+
+    // If location is out of bounds do not check anything
+    if (row >= 0 && row < gameField.getRows() &&
+        col >= 0 && col < gameField.getColumns()) {
+      if (gameField.getCell(row, col).getRealValue() === mine()) {
+        numOfMines += 1;
+      }
+    }
+  }
+
+  return numOfMines;
 };
 
  /**
