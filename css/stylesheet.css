@@ -12,6 +12,8 @@ body {
 
 	height: 100%;
 	margin: auto;
+
+	overflow: hidden;
 }
 
 body * {
@@ -21,6 +23,50 @@ body * {
 #main-container {
 	width: 100%;
 	height: 100%;
+}
+
+#welcome {
+	width: 50%;
+
+	margin-top: 5%;
+	margin-left: auto;
+	margin-right: auto;
+
+	text-align: center;
+}
+
+#welcome h1 {
+	font-family: 'Arimo', sans-serif;
+	font-size: 2.5em;
+}
+
+#welcome h2 {
+	font-family: 'Arimo', sans-serif;
+	font-size: 1.75em;
+	margin-top: 10%;
+}
+
+#diff-form label {
+	font-family: 'Arimo', sans-serif;
+	font-size: 1.25em;
+	margin: auto;
+}
+
+#diff-form #quick-play-button, #custom-play-button {
+	font-family: 'Arimo', sans-serif;
+	font-size: 1em;
+	margin-top: 2%;
+	cursor: pointer;
+}
+
+#row-select, #col-select, #mines-select {
+	display: inline;
+	font-family: 'Arimo', sans-serif;
+	font-size: 1em;
+}
+
+#row-input:hover, #col-input:hover {
+	cursor: text;
 }
 
 #header {
@@ -35,7 +81,7 @@ body * {
 	/* font-size is scaled with JS */
 }
 
-#mines-left {
+#flags-left {
 	float: right;
 	color: #724580;
 	/* font-size is scaled with JS */
@@ -78,4 +124,8 @@ body * {
 .cell.not-clicked:active {
 	opacity: 0.5;
 	background: #D0D6E2;
+}
+
+.cell.flagged {
+	background: #9F3A44;
 }

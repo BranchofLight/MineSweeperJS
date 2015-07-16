@@ -7,14 +7,14 @@
   * Sets up any variables needing defaults
   * Note: should be called before anything else
   */
- var setup = function() {
+ var gameSetup = function() {
    /* Placeholder until something else sets mine amount */
    gameField.setTotalMines(10);
    /* Placeholder until something else triggers the field generation */
    gameField.generateField(9, 9);
 
-   // Set timer to 30 seconds
-   timer.setTimeLeft(30000, true);
+   // Set timer to 0 seconds and to increment
+   timer.setTimeLeft(0, true);
    /* Placeholder until something else triggers the timer's start */
    // Makes the timer count down by 1 second each second
    // {Number} leap is both the refresh rate and decrement amount
@@ -51,20 +51,20 @@ var gameField = function () {
       totalMines = m;
     },
     /**
-     * Gets mines left on field
-     * @return {Number} minesLeft
+     * Gets flags left to place
+     * @return {Number} flagsLeft
      */
-    getMinesLeft: function() {
-      var minesFound = 0;
+    getFlagsLeft: function() {
+      var flagsFound = 0;
       for (var i = 0; i < rows; i++) {
         for (var j = 0; j < columns; j++) {
-          if (field[i][j].getShownValue() === this.getMine()) {
-            minesFound += 1;
+          if (field[i][j].getIsFlagged()) {
+            flagsFound += 1;
           }
         }
       }
 
-      return totalMines - minesFound;
+      return totalMines - flagsFound;
     },
 		// Returns columns
 		getColumns: function() {
@@ -168,6 +168,7 @@ var cell = function(r, c, val) {
 	var col = (typeof c === "number") ? c : 0;
 	var value = val || undefined;
 	var isClicked = false;
+  var isFlagged = false;
 
 	/* Object Literal */
 	return {
@@ -191,7 +192,13 @@ var cell = function(r, c, val) {
 		},
 		setIsClicked: function(val) {
 			isClicked = (typeof val === "boolean") ? val : false;
-		}
+		},
+    getIsFlagged: function() {
+      return isFlagged;
+    },
+    setIsFlagged: function(val) {
+      isFlagged = (typeof val === "boolean") ? val : false;
+    }
 	};
 };
 
@@ -203,18 +210,39 @@ var cell = function(r, c, val) {
   */
 var listeners = {
 	click: function() {
+    // Removes default menu even if no cell was clicked
+    document.oncontextmenu = function() {
+      return false;
+    };
+
     // Calling 'on' on #main-container makes sure it will work
     // even if no .cells are present on initialization
-		$('#main-container').on('click', '.cell', function() {
-			var location = [$(this).data('row'), $(this).data('col')];
-			var clickedCell = gameField.getCell(location[0], location[1]);
-			clickedCell.setIsClicked(true);
-      //$(this).css('background', '#D0D6E2');
-      if (clickedCell.getShownValue() === gameField.getMine())
-        gameView.refreshMinesLeft();
+		$('#main-container').on('mousedown', '.cell', function(event) {
+      // Get cell that was clicked for all events
+      var location = [$(this).data('row'), $(this).data('col')];
+      var clickedCell = gameField.getCell(location[0], location[1]);
 
-			gameView.refreshCell(clickedCell);
-      gameView.refreshCellClass(clickedCell);
+      // 0: left, 1: middle, 2: right
+      if (event.button === 0) {
+        if (clickedCell.getIsFlagged()) {
+          clickedCell.setIsFlagged(false);
+          gameView.setFlaggedClass(clickedCell, false);
+          gameView.refreshFlagsLeft();
+        }
+
+  			clickedCell.setIsClicked(true);
+
+  			gameView.refreshCell(clickedCell);
+        gameView.setClickedClass(clickedCell, true);
+
+      } else if (event.button == 2) {
+        // Only flag if cell has not been clicked
+        if (!clickedCell.getIsClicked()) {
+          clickedCell.setIsFlagged(true);
+          gameView.setFlaggedClass(clickedCell, true);
+          gameView.refreshFlagsLeft();
+        }
+      }
 		});
 	}
 };

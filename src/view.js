@@ -3,8 +3,17 @@
  * Source:  src/view.js
  */
 
+ /**
+  * Name: welcomeView
+  * Purpose: Contains everything necessary
+  * . to work with the welcome view
+  */
+ var welcomeView = function() {
+
+ };
+
 /**
- * Name: GameView
+ * Name: gameView
  * Purpose: Contains everything necessary
  * . to work with the game view
  */
@@ -20,9 +29,9 @@ var gameView = function() {
 		// Closes div id=timer
 		html += "</div>";
 
-		html += "<div id=\"mines-left\">";
-		html += "<p>Mines Left: " + gameField.getMinesLeft() + "</p>";
-		// Closes div id=mines-left
+		html += "<div id=\"flags-left\">";
+		html += "<p>Flags Left: " + gameField.getFlagsLeft() + "</p>";
+		// Closes div id=flags-left
 		html += "</div>";
 
 		// Closes div id=header
@@ -147,6 +156,7 @@ var gameView = function() {
 		},
 		/**
 		 * Refreshes the view for the given cell
+		 * To be called if the shown value changes
 		 * @param {Object} cellToRefresh
 		 */
 		refreshCell: function(cellToRefresh) {
@@ -159,24 +169,48 @@ var gameView = function() {
 			});
 		},
 		/**
-		 * Refreshes the HTML/CSS class of the cell
-		 * . to the approriate one
+		 * Sets the HTML/CSS clicked class of the cell
+		 * . to either on or off
 		 * @param {Object} cellToRefresh
+		 * @param {Boolean} setToClicked
 		 */
-		refreshCellClass: function(cellToRefresh) {
+		setClickedClass: function(cellToRefresh, setToClicked) {
+			setToClicked =
+				(typeof setToClicked === "boolean") ? setToClicked : false;
+
 			$('.cell').each(function() {
 				// Find HTML representation of cell
 				if ($(this).data('row') === cellToRefresh.getRow() &&
 				    $(this).data('col') === cellToRefresh.getCol()) {
-							if (cellToRefresh.getIsClicked()) {
-								$(this).removeClass('not-clicked');
-								$(this).addClass('clicked');
-							}
-							else {
-								$(this).removeClass('clicked');
-								$(this).addClass('not-clicked');
-							}
-						}
+					if (setToClicked) {
+						$(this).removeClass('not-clicked');
+						$(this).addClass('clicked');
+					} else {
+						$(this).removeClass('clicked');
+						$(this).addClass('not-clicked');
+					}
+				}
+			});
+		},
+		/**
+		 * Either removes or adds the CSS flagged class
+		 * @param {Object} cellToRefresh
+		 * @param {Boolean} setToFlagged
+		 */
+		setFlaggedClass: function(cellToRefresh, setToFlagged) {
+			setToFlagged =
+				(typeof setToFlagged === "boolean") ? setToFlagged : false;
+
+			$('.cell').each(function() {
+				// Find HTML representation of cell
+				if ($(this).data('row') === cellToRefresh.getRow() &&
+				    $(this).data('col') === cellToRefresh.getCol()) {
+					if (setToFlagged) {
+						$(this).addClass('flagged');
+					} else {
+						$(this).removeClass('flagged');
+					}
+				}
 			});
 		},
 		/**
@@ -188,10 +222,10 @@ var gameView = function() {
 			$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
 		},
 		/**
-		 * Refreshes mine's left on the view
+		 * Refreshes flag's left on the view
 		 */
-		refreshMinesLeft: function() {
-			$('#mines-left').html($('#mines-left').html().replace(/\d+/g, gameField.getMinesLeft()));
+		refreshFlagsLeft: function() {
+			$('#flags-left').html($('#flags-left').html().replace(/-?\d+/g, gameField.getFlagsLeft()));
 		}
 	};
 }();
