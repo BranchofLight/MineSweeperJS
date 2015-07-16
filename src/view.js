@@ -3,6 +3,7 @@
  * Source:  src/view.js
  */
 
+/* Placeholder */
 var removeWelcomeView = function() {
 	$('#welcome').remove();
 };
@@ -65,6 +66,13 @@ var gameView = function() {
 		setResizeEvent(function() {
 			setCellDimensions();
 		});
+	};
+
+	var displaySubmitButton = function() {
+		var html = "<div class=\"center-button\">";
+		html += "<button class=\"btn\" id=\"submit-solution\">Submit</button>";
+		html += "</div>";
+		$('#game-field').after(html);
 	};
 
 	/**
@@ -148,6 +156,7 @@ var gameView = function() {
 		displayGameView: function() {
 			displayHeader();
 			displayField();
+			displaySubmitButton();
 		},
 		/**
 		 * Refreshes the view for the given cell
