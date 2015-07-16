@@ -1,3 +1,7 @@
+html {
+	height: 100%;
+}
+
 body {
 	/* Used to prevent text being selected */
 	-webkit-user-select: none; /* Chrome/Safari */
@@ -5,6 +9,9 @@ body {
 	-ms-user-select: none; /* IE10+ */
 
 	background: #C4C9D4;
+
+	height: 100%;
+	margin: auto;
 }
 
 body * {
@@ -12,11 +19,13 @@ body * {
 }
 
 #main-container {
+	width: 100%;
+	height: 100%;
 }
 
 #header {
 	font-family: 'Arimo', sans-serif;
-	width: 60%;
+	height: 10%;
 	margin: auto;
 }
 
@@ -35,39 +44,21 @@ body * {
 #game-field {
 	clear: both;
 	font-weight: bold;
-	width: 60%;
 	margin: auto;
 }
 
 .cell {
 	/* tiny.cc/clr for colours */
 	display: inline-block;
-	/* Default but subject to change by JS */
-	width: 3em;
-	height: 3em;
 
 	/* For aligning text */
 	text-align: center;
 	vertical-align: bottom;
+	box-sizing: border-box;
 
 	background: #6F7E9D;
-	font-size: 2em;
 	font-family: 'Arimo', sans-serif;
 	/* Borders are added with JS to prevent overlap */
-	/* border: 1px solid black; */
-}
-
-
-.cell * {
-	display: inline;
-}
-
-/* If the <div>s were empty formatting would be
- * ruined. Instead, a paragraph with a blank value
- * of '-' is used and set to invisible.
- */
-.cell.not-clicked p {
-	visibility: hidden;
 }
 
 .cell.clicked:hover {

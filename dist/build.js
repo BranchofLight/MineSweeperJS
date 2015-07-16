@@ -350,15 +350,16 @@ var gameView = function() {
 	var displayField = function() {
 		html = "<div id=\"game-field\"></div>";
 		$('#main-container').append(html);
+		html = "";
 
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
 				// Can be hovered on by default
 				html += "<div class=\"cell not-clicked\" ";
-				html += "data-row=\"" + i + "\" data-col=\"" + j + "\"><p>";
+				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
 				html += gameField.getCell(i, j).getShownValue();
-				html += "</p></div>";
+				html += "</div>";
 			}
 
 			html += "<br />";
@@ -368,7 +369,6 @@ var gameView = function() {
 		setBorders();
 		setCellDimensions();
 
-		var that = this;
 		setResizeEvent(function() {
 			setCellDimensions();
 		});
@@ -378,50 +378,58 @@ var gameView = function() {
 	 * Sets borders for all cells to prevent overlap
 	 */
 	var	setBorders = function() {
+		var borderStyle = "1px solid black";
 		$('.cell').each(function() {
 			// All cells have a top and left border
-			$(this).css('border-left', '1px solid black');
-			$(this).css('border-top', '1px solid black');
+			$(this).css('border-left', borderStyle);
+			$(this).css('border-top', borderStyle);
 
 			// Last column cells have right borders
 			if ($(this).data('col') === gameField.getColumns()-1) {
-				$(this).css('border-right', '1px solid black');
+				$(this).css('border-right', borderStyle);
 			}
 
 			// Last row cells have bottom borders
 			if ($(this).data('row') === gameField.getRows()-1) {
-				$(this).css('border-bottom', '1px solid black');
+				$(this).css('border-bottom', borderStyle);
 			}
 		});
 	};
 
 	/**
-	 * Changes width and height of every cell
+	 * Calculates and sets width and height of every cell
 	 */
 	var setCellDimensions = function() {
-		// Allocates 60% of the viewport width to gameField
-		var cellWidth = (($(window).width())*0.6 / gameField.getColumns());
-		// Allocates 75% of the viewport's height to gameField
-		var cellHeight = ($(window).height() / gameField.getRows())*0.75;
+		// Give field width 60% and height 75%
+		var fieldWidth = 0.60 * $(window).width();
+		var fieldHeight = 0.75 * $(window).height();
 
-		// Use the smallest value (so it fits regardless)
-		var cellDimension = (cellWidth < cellHeight) ? cellWidth : cellHeight;
+		// Find the smaller of 2 to use as the dimension of each cell
+		var smaller = (fieldWidth < fieldHeight) ? fieldWidth : fieldHeight;
 
+		// Calculate smaller dimension and use it
+		var cellHeight = smaller/gameField.getRows();
+		var cellWidth = smaller/gameField.getColumns();
+		var cellDimension = (cellHeight < cellWidth) ? cellHeight : cellWidth;
+		// Floor it for an even number
+		cellDimension = Math.floor(cellDimension);
+
+		// Set CSS
 		$('.cell').css('width', cellDimension);
 		$('.cell').css('height', cellDimension);
-		// Keeps text vertically centered (note: will only work with one line of text)
-		$('.cell').css('line-height', $('.cell').css('height'));
-		// Give 50% of the cell to text
-		$('.cell').css('font-size', cellDimension*0.5);
-		// Give 40% of a cell's dimension to timer's font (just for scaling)
-		$('#timer').css('font-size', cellDimension*0.4);
-		$('#mines-left').css('font-size', cellDimension*0.4);
-		// Sets new width giving it 1 extra pixel for each column (border) + 1 extra
-		// . for far right cell which has a border on the left and right - all borders
-		// . are 1 pixel as of writing this comment
-		$('#game-field').css('width', (cellDimension*gameField.getColumns()+gameField.getColumns()+1));
-		// Sets the header width to the width of the game field
-		$('#header').css('width', $('#game-field').css('width'));
+		// Take up most of the cell with text
+		$('.cell').css('font-size', cellDimension*0.9);
+
+		// Calcualte new height and width
+		var newWidth = cellDimension*gameField.getColumns();
+		var newHeight = cellDimension*gameField.getRows();
+
+		// Set CSS
+		$('#game-field').css('width', newWidth);
+		$('#game-field').css('height', newHeight);
+		$('#header').css('width', newWidth);
+		// Scale to cells
+		$('#header').css('font-size', newWidth*0.05);
 	};
 
 	/* Public Functions */
