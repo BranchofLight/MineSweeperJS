@@ -5,8 +5,8 @@
 $(document).ready(function() {
 	console.log("Hello World!");
 
-	gameSetup();
-	// displayMainMenu();
+	// gameSetup();
+	displayMainMenu();
 
 	addListeners();
 });

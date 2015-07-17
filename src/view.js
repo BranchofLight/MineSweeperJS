@@ -3,11 +3,6 @@
  * Source:  src/view.js
  */
 
-/* Placeholder */
-var removeWelcomeView = function() {
-	$('#welcome').remove();
-};
-
 /**
  * Name: displayMainMenu
  * Purpose: Will display the main menu on the screen
@@ -20,7 +15,7 @@ var displayMainMenu = function() {
 	html += "<h1>Welcome to MineSweeper JS!</h1>";
 	html += "<h2>Quick Play</h2>";
 
-	html += "<form id=\"diff-form\">";
+	html += "<div id=\"diff-form\">";
 	html += "<input type=\"radio\" name=\"difficulty\" id=\"beginner\" checked>";
 	html += "<label for=\"beginner\">Beginner</label><br>";
 	html += "<input type=\"radio\" name=\"difficulty\" id=\"intermediate\">";
@@ -30,7 +25,7 @@ var displayMainMenu = function() {
 	html += "<input type=\"radio\" name=\"difficulty\" id=\"impossible\">";
 	html += "<label for=\"impossible\">Impossible</label><br>";
 	html += "<button class=\"btn\" id=\"quick-play-button\">Play</button>";
-	html += "</form>";
+	html += "</div>";
 
 	html += "<h2>Custom Game</h2>";
 
@@ -49,6 +44,11 @@ var displayMainMenu = function() {
 
 	html += "<button class=\"btn\"";
 	html += "id=\"custom-play-button\">Play</button>";
+	html += "<br>";
+
+	html += "<h2>How To</h2>";
+	html += "<p>Left Click (tap): reveal cell</p>";
+	html += "<p>Right Click (long tap): flag cell</p>";
 
 	html += "</div>";
 
@@ -77,16 +77,30 @@ var transitionToEndGame = function() {
 		}, 500);
 	};
 
-	// Remove button first and quickly to prevent late clicks
-	$('#submit-solution').fadeOut(100, function() {
-		$('.center-button').remove();
-	});
-
 	// Prevent clicks or hovers from changing CSS
 	$('.cell').removeClass('not-clicked');
 	// Remove listeners to prevent clicks from changing view
 	// Called with animation as a callback
 	removeListeners(animation);
+};
+
+/**
+ * Transitions the view to the main game screen
+ * @param {Object} settings
+ */
+var transitionToGame = function(settings) {
+	// Used as a callback later
+	var animation = function() {
+		setTimeout(function() {
+			$('#welcome').fadeOut(750, function() {
+				gameSetup(settings);
+			});
+		}, 100);
+	};
+
+	// Remove listeners to prevent clicks from changing view
+	listeners.off.buttons();
+	animation();
 };
 
 /**
@@ -178,13 +192,6 @@ var gameView = function() {
 		});
 	};
 
-	var displaySubmitButton = function() {
-		var html = "<div class=\"center-button\">";
-		html += "<button class=\"btn\" id=\"submit-solution\">Submit</button>";
-		html += "</div>";
-		$('#game-field').after(html);
-	};
-
 	/**
 	 * Sets borders for all cells to prevent overlap
 	 */
@@ -266,7 +273,6 @@ var gameView = function() {
 		displayGameView: function() {
 			displayHeader();
 			displayField();
-			displaySubmitButton();
 		},
 		/**
 		 * Removes HTML/CSS field and header

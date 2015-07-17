@@ -45,19 +45,19 @@ body * {
 	color: #724580;
 	font-family: 'Arimo', sans-serif;
 	font-size: 1.75em;
-	margin-top: 10%;
+	margin-top: 5%;
 }
 
 #diff-form label {
 	font-family: 'Arimo', sans-serif;
-	font-size: 1.25em;
+	font-size: 1.1em;
+	cursor: pointer;
 }
 
-#diff-form #quick-play-button, #custom-play-button {
+#welcome p {
 	font-family: 'Arimo', sans-serif;
 	font-size: 1em;
 	margin-top: 2%;
-	cursor: pointer;
 }
 
 #row-select, #col-select, #mines-select {
@@ -66,7 +66,7 @@ body * {
 	font-size: 1em;
 }
 
-#row-input:hover, #col-input:hover {
+#row-input:hover, #col-input:hover, #mines-input {
 	cursor: text;
 }
 
@@ -178,6 +178,10 @@ body * {
 	cursor: pointer;
 }
 
+.btn:active {
+	opacity: 0.8;
+}
+
 /* mine-number in text
 1 - light green
 2 - light blue
@@ -197,7 +201,7 @@ body * {
 }
 
 .mine-number-3 {
-	color: #D12E26;
+	color: #B82E26;
 }
 
 .mine-number-4 {
@@ -205,7 +209,7 @@ body * {
 }
 
 .mine-number-5 {
-	color: #11164A;
+	color: #1D267F;
 }
 
 .mine-number-6 {

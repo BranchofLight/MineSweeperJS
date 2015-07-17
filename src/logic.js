@@ -5,23 +5,31 @@
 
  /**
   * Sets up any variables needing defaults
-  * Note: should be called before anything else
+  * Note: should be called before anything else in game
+  * @param {Object} settings
   */
- var gameSetup = function() {
-   /* Placeholder until something else sets mine amount */
-   gameField.setTotalMines(10);
-   /* Placeholder until something else triggers the field generation */
-   gameField.generateField(9, 9);
+ var gameSetup = function(settings) {
+   // If not an object (or null) set to a default object (eg. beginner)
+   settings = (typeof settings === "object" && settings !== null) ? settings :
+   {
+     diff: "beginner",
+     rows: 9,
+     cols: 9,
+     mines: 10,
+   };
 
-   // Set timer to 0 seconds and to increment
+   gameField.setTotalMines(settings.mines);
+   gameField.generateField(settings.rows, settings.cols);
    timer.setTimeLeft(0, true);
-   /* Placeholder until something else triggers the timer's start */
-   // Makes the timer count down by 1 second each second
-   // {Number} leap is both the refresh rate and decrement amount
-   timer.startTimer(1000);
+
 
    // Display all views
    gameView.displayGameView();
+   $('#main-container').hide();
+   $('#main-container').fadeIn(1000, function() {
+     // One second increments
+     timer.startTimer(1000);
+   });
  };
 
  /**
@@ -294,7 +302,7 @@ var numOfAdjacentMines = function(cellToCheck) {
   */
 var listeners = {
 	on: {
-    click: function() {
+    clicks: function() {
       // Removes default menu even if no cell was clicked
       document.oncontextmenu = function() {
         return false;
@@ -346,13 +354,70 @@ var listeners = {
           }
         }
   		});
-  	}
+  	},
+    buttons: function() {
+      $('#quick-play-button').on('click', function() {
+        console.log("clicked");
+        if ($('#beginner').prop("checked")) {
+          transitionToGame({
+            diff: "beginner",
+            rows: 9,
+            cols: 9,
+            mines: 10 // ~12%
+          });
+        } else if ($('#intermediate').prop("checked")) {
+          transitionToGame({
+            diff: "intermediate",
+            rows: 15,
+            cols: 15,
+            mines: 35 // ~17%
+          });
+        } else if ($('#expert').prop("checked")) {
+          transitionToGame({
+            diff: "expert",
+            rows: 20,
+            cols: 20,
+            mines: 80 // 20%
+          });
+        } else if ($('#impossible').prop("checked")) {
+          transitionToGame({
+            diff: "impossible",
+            rows: 25,
+            cols: 25,
+            mines: 156 // ~25%
+          });
+        }
+      });
+
+      $('#custom-play-button').on('click', function() {
+        var r = parseInt($('#row-input').val());
+        var c = parseInt($('#col-input').val());
+        var m = parseInt($('#mines-input').val());
+
+        if (!isNaN(r) && !isNaN(c) && !isNaN(m)) {
+          console.log("valid input");
+          if (r >= 4 && r <= 30) {
+            console.log("valid rows");
+          }
+          if (c >= 4 && c <= 30) {
+            console.log("valid cols");
+          }
+          var minePercentage = (m/(r*c))*100;
+          if (m > 0 && minePercentage < 100) {
+            console.log("valid mines");
+          }
+        }
+      });
+    }
   },
-  // Should remove whatever was set in on
+  // Should remove whatever was set in on (if desired)
   off: {
-    click: function() {
+    clicks: function() {
   		$('#main-container').off('mousedown', '.cell');
-  	}
+  	},
+    buttons: function() {
+      $('#quick-play-button').off('click');
+    }
   }
 };
 
