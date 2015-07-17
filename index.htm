@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link type='text/css' rel='stylesheet' href='http://fonts.googleapis.com/css?family=Arimo'>
+		<link type="text/css" rel="stylesheet" href="css/stylesheet.css" />
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script type="text/javascript" src="dist/build.js"></script>
+		<title>MineSweeper JS</title>
+	</head>
+	<body>
+		<div id="main-container">
+			<!-- div id="welcome" be deleted on submission of choice -->
+			<div id="welcome">
+				<h1>Welcome to MineSweeper JS!</h1>
+				<h2>Quick Play</h2>
+				<form id="diff-form">
+					<input type="radio" name="difficulty" id="beginner" checked>
+					<label for="beginner">Beginner</label><br>
+
+					<input type="radio" name="difficulty" id="intermediate">
+					<label for="intermediate">Intermediate</label><br>
+
+					<input type="radio" name="difficulty" id="expert">
+					<label for="expert">Expert</label><br>
+
+					<input type="radio" name="difficulty" id="impossible">
+					<label for="impossible">Impossible</label><br>
+
+					<button id="quick-play-button">Play</button>
+				</form>
+
+				<h2>Custom Game</h2>
+
+				<p id="row-select">Rows (between 4 and 30):</p>
+				<input type="text" name="row-text" size="2" id="row-input"><br><br>
+
+				<p id="col-select">Columns (between 4 and 30):</p>
+				<input type="text" name="col-text" size="2" id="col-input"><br><br>
+
+				<p id="mines-select">Mines (no more than 100% of cells):</p>
+				<input type="text" name="mines-text" size="2" id="mines-input"><br>
+
+				<button id="custom-play-button">Play</button>
+			</div>
+		</div>
+	</body>
+</html>
