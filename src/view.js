@@ -56,6 +56,16 @@ var displayMainMenu = function() {
 };
 
 /**
+ * Transitions the view to the end game screen
+ * @param Will take a paramater for loss/win and time
+ */
+var transitionToEndGame = function() {
+	setTimeout(function() {
+		$('#main-container *').fadeOut(1500, displayEndGame());
+	}, 500);
+};
+
+/**
  * Name: displayEndGame
  * Purpose: Will display the end game on the screen
  * Note: Does no HTML deletion so no <div> other than

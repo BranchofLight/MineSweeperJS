@@ -314,8 +314,11 @@ var listeners = {
         }
 
         if (clickedCell.getRealValue() === mine()) {
-          gameView.removeSelf();
-          displayEndGame();
+          clickedCell.setIsClicked(true);
+    			gameView.refreshCell(clickedCell);
+          gameView.setClickedClass(clickedCell, true);
+
+          transitionToEndGame();
         } else {
           clickedCell.setIsClicked(true);
     			gameView.refreshCell(clickedCell);
@@ -323,8 +326,7 @@ var listeners = {
 
           // Check if this is the last cell needed to be clicked! (eg. win)
           if (checkWin()) {
-            gameView.removeSelf();
-            displayEndGame();
+            transitionToEndGame();
           }
 
           // Win state 2:
@@ -350,8 +352,7 @@ var listeners = {
 
           // Check if this is the last flag needed to be placed! (eg. win)
           if (checkWin()) {
-            gameView.removeSelf();
-            displayEndGame();
+            transitionToEndGame();
           }
         }
       }
