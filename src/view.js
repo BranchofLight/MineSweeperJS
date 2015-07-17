@@ -126,7 +126,7 @@ var gameView = function() {
 				// Closes class "
 				html += "\" ";
 				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
-				html += cellToDisplay.getShownValue();
+				html += cellToDisplay.getRealValue();//getShownValue();
 				html += "</div>";
 			}
 
@@ -328,8 +328,8 @@ var gameView = function() {
 			// Then replace the HTML with the new HTML
 			var html = $('#timer').html();
 			// Checked in case timer is attempting to refresh when it no longer exists
-			if (typeof html === "String") {
-				html.replace(/\d+/g, timer.getTimeLeftSeconds());
+			if (typeof html === "string") {
+				html = html.replace(/\d+/g, timer.getTimeLeftSeconds());
 				$('#timer').html(html);
 			}
 		},

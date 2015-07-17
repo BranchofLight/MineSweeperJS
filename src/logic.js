@@ -260,7 +260,7 @@ var getAdjacentCells = function(cellToCheck) {
   }
 
   return adjacentCells;
-}
+};
 
 /**
  * Calculates and returns the number of
@@ -309,7 +309,6 @@ var listeners = {
           gameView.refreshFlagsLeft();
         }
 
-
         if (clickedCell.getRealValue() === blank()) {
           gameView.revealAdjacentCells(clickedCell);
         }
@@ -321,6 +320,19 @@ var listeners = {
           clickedCell.setIsClicked(true);
     			gameView.refreshCell(clickedCell);
           gameView.setClickedClass(clickedCell, true);
+
+          // Check if this is the last cell needed to be clicked! (eg. win)
+          if (checkWin()) {
+            gameView.removeSelf();
+            displayEndGame();
+          }
+
+          // Win state 2:
+          // - All cells that are mines are flagged
+          // - User pressed submit
+
+          // Loss state 2:
+          // - User pressed submit when not all remaining cells are mines
         }
       } else if (event.button == 2) {
         // Only flag if cell has not been clicked
@@ -335,10 +347,44 @@ var listeners = {
             gameView.setFlaggedClass(clickedCell, true);
             gameView.refreshFlagsLeft();
           }
+
+          // Check if this is the last flag needed to be placed! (eg. win)
+          if (checkWin()) {
+            gameView.removeSelf();
+            displayEndGame();
+          }
         }
       }
 		});
 	}
+};
+
+/**
+ * Returns if the player has won or not
+ * @return {Boolean}
+ */
+var checkWin = function() {
+  // Win state 1:
+  // - All cells that are not mines are clicked
+  // - All cells that are mines are flagged
+  var notClicked = 0;
+  var flagged = 0;
+  for (var i = 0; i < gameField.getRows(); i++) {
+    for (var j = 0; j < gameField.getColumns(); j++) {
+      if (!gameField.getCell(i, j).getIsClicked()) {
+        console.log("is not clicked")
+        notClicked += 1;
+      }
+      if (gameField.getCell(i, j).getIsFlagged()) {
+        console.log("is flagged")
+        flagged += 1;
+      }
+    }
+  }
+
+  console.log("notclicked: " + notClicked);
+  console.log("flagged: " + flagged);
+  return notClicked === flagged;
 };
 
 /**
