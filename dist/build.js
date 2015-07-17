@@ -150,6 +150,7 @@ var gameField = function () {
             if (newVal !== 0) {
               // Set new value
               field[i][j].setRealValue(newVal);
+              // Set CSS on cells in view! (displayField)
             }
           }
 				}
@@ -507,10 +508,18 @@ var gameView = function() {
 		for (var i = 0; i < gameField.getRows(); i++) {
 			for (var j = 0; j < gameField.getColumns(); j++)
 			{
+				var cellToDisplay = gameField.getCell(i, j);
 				// Can be hovered on by default
-				html += "<div class=\"cell not-clicked\" ";
+				// Careful: class " not closed!
+				html += "<div class=\"cell not-clicked ";
+				if (cellToDisplay.getRealValue() !== mine() &&
+					  cellToDisplay.getRealValue() !== blank()) {
+					html += "mine-number-" + cellToDisplay.getRealValue();
+				}
+				// Closes class "
+				html += "\" ";
 				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
-				html += gameField.getCell(i, j).getShownValue();
+				html += cellToDisplay.getShownValue();
 				html += "</div>";
 			}
 

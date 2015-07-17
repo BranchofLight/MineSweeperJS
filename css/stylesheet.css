@@ -176,3 +176,45 @@ body * {
   text-decoration: none;
 	cursor: pointer;
 }
+
+/* mine-number in text
+1 - light green
+2 - light blue
+3 - light red
+4 - orange
+5 - dark blue
+6 - dark purple
+7 - dark red
+8 - black */
+
+.mine-number-1 {
+	color: #3BA12D;
+}
+
+.mine-number-2 {
+	color: #54CDD1;
+}
+
+.mine-number-3 {
+	color: #D12E26;
+}
+
+.mine-number-4 {
+	color: #D17025;
+}
+
+.mine-number-5 {
+	color: #11164A;
+}
+
+.mine-number-6 {
+	color: #6E21D1;
+}
+
+.mine-number-7 {
+	color: #87271F;
+}
+
+.mine-number-8 {
+	color: black;
+}

@@ -135,6 +135,7 @@ var gameField = function () {
             if (newVal !== 0) {
               // Set new value
               field[i][j].setRealValue(newVal);
+              // Set CSS on cells in view! (displayField)
             }
           }
 				}
