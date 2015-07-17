@@ -54,6 +54,9 @@ var gameField = function () {
 
 	/* Object Literal */
 	return {
+    getTotalMines: function() {
+      return totalMines;
+    },
     // Sets the total number of mines on the field
     setTotalMines: function(m) {
       totalMines = m;
@@ -316,30 +319,9 @@ var listeners = {
             gameView.revealAdjacentCells(clickedCell);
           }
 
-          // Loss check
-          if (clickedCell.getRealValue() === mine()) {
-            clickedCell.setIsClicked(true);
-      			gameView.refreshCell(clickedCell);
-            gameView.setClickedClass(clickedCell, true);
-
-            transitionToEndGame();
-          } else {
-            clickedCell.setIsClicked(true);
-      			gameView.refreshCell(clickedCell);
-            gameView.setClickedClass(clickedCell, true);
-
-            // Check if this is the last cell needed to be clicked! (eg. win)
-            if (checkWin()) {
-              transitionToEndGame();
-            }
-
-            // Win state 2:
-            // - All cells that are mines are flagged
-            // - User pressed submit
-
-            // Loss state 2:
-            // - User pressed submit when not all remaining cells are mines
-          }
+          clickedCell.setIsClicked(true);
+      		gameView.refreshCell(clickedCell);
+          gameView.setClickedClass(clickedCell, true);
         } else if (event.button == 2) {
           // Only flag if cell has not been clicked
           if (!clickedCell.getIsClicked()) {
@@ -353,11 +335,14 @@ var listeners = {
               gameView.setFlaggedClass(clickedCell, true);
               gameView.refreshFlagsLeft();
             }
+          }
+        }
 
-            // Check if this is the last flag needed to be placed! (eg. win)
-            if (checkWin()) {
-              transitionToEndGame();
-            }
+        // Check for win on either left or right click
+        // AFTER cell modifications above
+        if (event.button === 0 || event.button === 1) {
+          if (checkWin()) {
+            transitionToEndGame();
           }
         }
   		});
@@ -373,7 +358,6 @@ var listeners = {
 
 /**
  * Activates listeners
- * @param {Function} callback
  */
 var addListeners = function() {
   for (var prop in listeners.on)
@@ -397,9 +381,6 @@ var removeListeners = function(callback) {
  * @return {Boolean}
  */
 var checkWin = function() {
-  // Win state 1:
-  // - All cells that are not mines are clicked
-  // - All cells that are mines are flagged
   var notClicked = 0;
   var flagged = 0;
   for (var i = 0; i < gameField.getRows(); i++) {
@@ -413,7 +394,7 @@ var checkWin = function() {
     }
   }
 
-  return notClicked === flagged;
+  return notClicked === flagged || notClicked === gameField.getTotalMines();
 };
 
 /**
