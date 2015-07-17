@@ -226,15 +226,13 @@ var cell = function(r, c, val) {
 };
 
 /**
- * Calculates and returns the number of
- * . mines adjacent to a cell paramater
+ * Returns an array of cells adjacent to the paramater cell
  * @param {Object} cellToCheck
+ * @return {Array} adjacentCells
  */
-var numOfAdjacentMines = function(cellToCheck) {
+var getAdjacentCells = function(cellToCheck) {
   var r = cellToCheck.getRow();
   var c = cellToCheck.getCol();
-
-  var numOfMines = 0;
 
   // All locations to check
   var adjacent = [
@@ -248,6 +246,8 @@ var numOfAdjacentMines = function(cellToCheck) {
     [r+1, c+1],
   ];
 
+  var adjacentCells = [];
+
   for (var i = 0; i < adjacent.length; i++) {
     var row = adjacent[i][0];
     var col = adjacent[i][1];
@@ -255,9 +255,26 @@ var numOfAdjacentMines = function(cellToCheck) {
     // If location is out of bounds do not check anything
     if (row >= 0 && row < gameField.getRows() &&
         col >= 0 && col < gameField.getColumns()) {
-      if (gameField.getCell(row, col).getRealValue() === mine()) {
-        numOfMines += 1;
-      }
+      adjacentCells.push(gameField.getCell(row, col));
+    }
+  }
+
+  return adjacentCells;
+}
+
+/**
+ * Calculates and returns the number of
+ * . mines adjacent to a cell paramater
+ * @param {Object} cellToCheck
+ * @return {Number} numOfMines
+ */
+var numOfAdjacentMines = function(cellToCheck) {
+  var numOfMines = 0;
+  var adjacentCells = getAdjacentCells(cellToCheck);
+
+  for (var i = 0; i < adjacentCells.length; i++) {
+    if (adjacentCells[i].getRealValue() === mine()) {
+      numOfMines += 1;
     }
   }
 
@@ -292,8 +309,13 @@ var listeners = {
           gameView.refreshFlagsLeft();
         }
 
-  			clickedCell.setIsClicked(true);
+        if (clickedCell.getRealValue() === blank()) {
+          gameView.revealAdjacentCells(clickedCell);
+        } /* else {
+          // code for if it is a mine
+        }*/
 
+  			clickedCell.setIsClicked(true);
   			gameView.refreshCell(clickedCell);
         gameView.setClickedClass(clickedCell, true);
 

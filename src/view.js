@@ -51,7 +51,7 @@ var displayMainMenu = function() {
 	html += "id=\"custom-play-button\">Play</button>";
 
 	html += "</div>";
-	
+
 	$('#main-container').append(html);
 };
 
@@ -245,6 +245,27 @@ var gameView = function() {
 							$(this).html(cellToRefresh.getShownValue());
 						}
 			});
+		},
+		/**
+		 * Reveals all blank cells adjacent
+		 * . as well as any cells adjacent to a blank
+		 * @param {Object} cellToCheck
+		 */
+		revealAdjacentCells: function(cellToCheck) {
+			var adjacentCells = getAdjacentCells(cellToCheck);
+			for (var i = 0; i < adjacentCells.length; i++) {
+				// If cell is not flagged and not clicked
+				if (!adjacentCells[i].getIsFlagged() &&
+						!adjacentCells[i].getIsClicked()) {
+					// Reveal cell
+					adjacentCells[i].setIsClicked(true);
+					this.refreshCell(adjacentCells[i]);
+		      this.setClickedClass(adjacentCells[i], true);
+					// Now go check it's cells and make them revealed if it's blank
+					if (adjacentCells[i].getRealValue() === blank())
+						this.revealAdjacentCells(adjacentCells[i]);
+				}
+			}
 		},
 		/**
 		 * Sets the HTML/CSS clicked class of the cell
