@@ -60,9 +60,13 @@ var displayMainMenu = function() {
  * @param Will take a paramater for loss/win and time
  */
 var transitionToEndGame = function() {
-	setTimeout(function() {
-		$('#main-container *').fadeOut(1500, displayEndGame());
-	}, 500);
+	var animation = function() {
+		setTimeout(function() {
+			$('#main-container *').fadeOut(1500, displayEndGame());
+		}, 500);
+	};
+
+	removeListeners(animation);
 };
 
 /**

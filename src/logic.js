@@ -286,78 +286,112 @@ var numOfAdjacentMines = function(cellToCheck) {
   * Purpose: Holds all listeners needed
   * . outside objects for the game
   * (can be activated anywhere)
+  * on: enable listeners
+  * off: disable listeners
   */
 var listeners = {
-	click: function() {
-    // Removes default menu even if no cell was clicked
-    document.oncontextmenu = function() {
-      return false;
-    };
+	on: {
+    click: function() {
+      // Removes default menu even if no cell was clicked
+      document.oncontextmenu = function() {
+        return false;
+      };
 
-    // Calling 'on' on #main-container makes sure it will work
-    // even if no .cells are present on initialization
-		$('#main-container').on('mousedown', '.cell', function(event) {
-      // Get cell that was clicked for all events
-      var location = [$(this).data('row'), $(this).data('col')];
-      var clickedCell = gameField.getCell(location[0], location[1]);
+      // Calling 'on' on #main-container makes sure it will work
+      // even if no .cells are present on initialization
+  		$('#main-container').on('mousedown', '.cell', function(event) {
+        // Get cell that was clicked for all events
+        var location = [$(this).data('row'), $(this).data('col')];
+        var clickedCell = gameField.getCell(location[0], location[1]);
 
-      // 0: left, 1: middle, 2: right
-      if (event.button === 0) {
-        if (clickedCell.getIsFlagged()) {
-          clickedCell.setIsFlagged(false);
-          gameView.setFlaggedClass(clickedCell, false);
-          gameView.refreshFlagsLeft();
-        }
-
-        if (clickedCell.getRealValue() === blank()) {
-          gameView.revealAdjacentCells(clickedCell);
-        }
-
-        if (clickedCell.getRealValue() === mine()) {
-          clickedCell.setIsClicked(true);
-    			gameView.refreshCell(clickedCell);
-          gameView.setClickedClass(clickedCell, true);
-
-          transitionToEndGame();
-        } else {
-          clickedCell.setIsClicked(true);
-    			gameView.refreshCell(clickedCell);
-          gameView.setClickedClass(clickedCell, true);
-
-          // Check if this is the last cell needed to be clicked! (eg. win)
-          if (checkWin()) {
-            transitionToEndGame();
-          }
-
-          // Win state 2:
-          // - All cells that are mines are flagged
-          // - User pressed submit
-
-          // Loss state 2:
-          // - User pressed submit when not all remaining cells are mines
-        }
-      } else if (event.button == 2) {
-        // Only flag if cell has not been clicked
-        if (!clickedCell.getIsClicked()) {
-          // If flag is already flagged, unflag
+        // 0: left, 1: middle, 2: right
+        if (event.button === 0) {
           if (clickedCell.getIsFlagged()) {
             clickedCell.setIsFlagged(false);
             gameView.setFlaggedClass(clickedCell, false);
             gameView.refreshFlagsLeft();
-          } else {
-            clickedCell.setIsFlagged(true);
-            gameView.setFlaggedClass(clickedCell, true);
-            gameView.refreshFlagsLeft();
           }
 
-          // Check if this is the last flag needed to be placed! (eg. win)
-          if (checkWin()) {
+          if (clickedCell.getRealValue() === blank()) {
+            gameView.revealAdjacentCells(clickedCell);
+          }
+
+          // Loss check
+          if (clickedCell.getRealValue() === mine()) {
+            clickedCell.setIsClicked(true);
+      			gameView.refreshCell(clickedCell);
+            gameView.setClickedClass(clickedCell, true);
+
             transitionToEndGame();
+          } else {
+            clickedCell.setIsClicked(true);
+      			gameView.refreshCell(clickedCell);
+            gameView.setClickedClass(clickedCell, true);
+
+            // Check if this is the last cell needed to be clicked! (eg. win)
+            if (checkWin()) {
+              transitionToEndGame();
+            }
+
+            // Win state 2:
+            // - All cells that are mines are flagged
+            // - User pressed submit
+
+            // Loss state 2:
+            // - User pressed submit when not all remaining cells are mines
+          }
+        } else if (event.button == 2) {
+          // Only flag if cell has not been clicked
+          if (!clickedCell.getIsClicked()) {
+            // If flag is already flagged, unflag
+            if (clickedCell.getIsFlagged()) {
+              clickedCell.setIsFlagged(false);
+              gameView.setFlaggedClass(clickedCell, false);
+              gameView.refreshFlagsLeft();
+            } else {
+              clickedCell.setIsFlagged(true);
+              gameView.setFlaggedClass(clickedCell, true);
+              gameView.refreshFlagsLeft();
+            }
+
+            // Check if this is the last flag needed to be placed! (eg. win)
+            if (checkWin()) {
+              transitionToEndGame();
+            }
           }
         }
-      }
-		});
-	}
+  		});
+  	}
+  },
+  // Should remove whatever was set in on
+  off: {
+    click: function() {
+  		$('#main-container').off('mousedown', '.cell');
+  	}
+  }
+};
+
+/**
+ * Activates listeners
+ * @param {Function} callback
+ */
+var addListeners = function() {
+  for (var prop in listeners.on)
+		listeners.on[prop]();
+};
+
+/**
+ * Deactivates listeners
+ * @param {Function} callback
+ */
+var removeListeners = function(callback) {
+  console.log("called");
+  for (var prop in listeners.off) {
+    console.log(prop);
+    listeners.off[prop]();
+  }
+
+  callback();
 };
 
 /**
@@ -373,18 +407,14 @@ var checkWin = function() {
   for (var i = 0; i < gameField.getRows(); i++) {
     for (var j = 0; j < gameField.getColumns(); j++) {
       if (!gameField.getCell(i, j).getIsClicked()) {
-        console.log("is not clicked")
         notClicked += 1;
       }
       if (gameField.getCell(i, j).getIsFlagged()) {
-        console.log("is flagged")
         flagged += 1;
       }
     }
   }
 
-  console.log("notclicked: " + notClicked);
-  console.log("flagged: " + flagged);
   return notClicked === flagged;
 };
 

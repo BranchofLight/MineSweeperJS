@@ -8,7 +8,5 @@ $(document).ready(function() {
 	gameSetup();
 	// displayMainMenu();
 
-	// Activate listeners
-	for (var prop in listeners)
-		listeners[prop]();
+	addListeners();
 });
