@@ -166,7 +166,7 @@ var gameView = function() {
 				html += "</div>";
 			}
 
-			html += "<br />";
+			html += "<br>";
 		}
 
 		$('#game-field').append(html);
@@ -299,6 +299,7 @@ var gameView = function() {
 			var adjacentCells = getAdjacentCells(cellToCheck);
 			for (var i = 0; i < adjacentCells.length; i++) {
 				// If cell is not flagged and not clicked
+				// This also ensures there is no stack overflow from recursion later on
 				if (!adjacentCells[i].getIsFlagged() &&
 						!adjacentCells[i].getIsClicked()) {
 					// Reveal cell
