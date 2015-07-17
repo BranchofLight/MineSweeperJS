@@ -9,7 +9,7 @@ module.exports = function(grunt) {
       },
       dist: {
         src: ['src/*.js'],
-        dest: 'dist/build.js',
+        dest: 'dist/debug.js',
       },
     },
     watch: {
@@ -19,7 +19,14 @@ module.exports = function(grunt) {
     jshint: {
       src: ['Gruntfile.js'],
       beforeconcat: ['src/*.js'],
-      afterconcat: ['dist/build.js'],
+      afterconcat: ['dist/debug.js'],
+    },
+    uglify: {
+      my_target: {
+        files: {
+          'dist/release.js': ['src/*.js']
+        }
+      }
     }
   });
 
@@ -29,6 +36,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   // Load the plugin that provides the "jshint" task.
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  // Load the plugin that provides the "uglify" task.
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   // Default task(s).
   grunt.registerTask('default', ['concat', 'jshint']);
@@ -36,4 +45,5 @@ module.exports = function(grunt) {
   grunt.registerTask('wat', ['watch']);
   grunt.registerTask('lint', ['jshint']);
   grunt.registerTask('cat', ['concat']);
+  grunt.registerTask('ugly', ['uglify']);
 };
