@@ -60,12 +60,32 @@ var displayMainMenu = function() {
  * @param Will take a paramater for loss/win and time
  */
 var transitionToEndGame = function() {
+	// Needed because the wildcard * calls the callback
+	// . for every element otherwise
+	var hasFadedOnce = false;
+
+	// Used as a callback later
 	var animation = function() {
 		setTimeout(function() {
-			$('#main-container *').fadeOut(1500, displayEndGame());
+			$('#main-container *').fadeOut(1500, function() {
+				if (!hasFadedOnce) {
+					gameView.removeSelf();
+					displayEndGame();
+					hasFadedOnce = true;
+				}
+			});
 		}, 500);
 	};
 
+	// Remove button first and quickly to prevent late clicks
+	$('#submit-solution').fadeOut(100, function() {
+		$('.center-button').remove();
+	});
+
+	// Prevent clicks or hovers from changing CSS
+	$('.cell').removeClass('not-clicked');
+	// Remove listeners to prevent clicks from changing view
+	// Called with animation as a callback
 	removeListeners(animation);
 };
 
@@ -77,7 +97,7 @@ var transitionToEndGame = function() {
  * @param Will take a paramater for loss/win and time
  */
 var displayEndGame = function() {
-	var html = "<div id=\"end-game\">";
+	var html = "<div id=\"end-game\" style=\"display:none\">";
 	html += "<h1>Congratulations! / Game Over</h1>";
 	html += "<p class=\"top-marg\">You won / lost in #time seconds</p>";
 	html += "<p>Play again?</p>";
@@ -86,6 +106,8 @@ var displayEndGame = function() {
 	html += "</div>";
 
 	$('#main-container').append(html);
+
+	$('#end-game').fadeIn(1000);
 };
 
 /**

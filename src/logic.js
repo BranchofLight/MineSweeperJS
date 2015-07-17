@@ -385,9 +385,7 @@ var addListeners = function() {
  * @param {Function} callback
  */
 var removeListeners = function(callback) {
-  console.log("called");
   for (var prop in listeners.off) {
-    console.log(prop);
     listeners.off[prop]();
   }
 
