@@ -444,26 +444,21 @@ var timer = function() {
       var that = this;
       // Default to decrementing
       shouldInc = (typeof shouldInc === "boolean") ? shouldInc : false;
-      // {Function} counter will be used till timeLeft reaches 0
-      var counter = function() {
-        setTimeout(function() {
-          // Decrement or increment timer
-          if (shouldInc) {
-            that.decrementTimeLeft(leap);
-          }
-          else {
-            that.incrementTimeLeft(leap);
-          }
-          // Refresh view
-          gameView.refreshTimer();
-          // Start again if there is time left
-          if (timer.getTimeLeft() > 0)
-            counter();
-        }, leap);
-      };
 
-      // Call to start the "loop"
-      counter();
+      var interval = setInterval(function() {
+        // Decrement or increment timer
+        if (shouldInc) {
+          that.decrementTimeLeft(leap);
+        } else {
+          that.incrementTimeLeft(leap);
+        }
+        // Refresh view
+        gameView.refreshTimer();
+
+        if (that.getTimeLeft() <= 0) {
+          clearInterval(interval);
+        }
+      }, leap);
     }
   };
 }();
