@@ -87,7 +87,7 @@ var gameView = function() {
 	var displayHeader = function() {
 		var html = "<div id=\"header\">";
 		html += "<div id=\"timer\">";
-		html += "<p>Time Left: " + timer.getTimeLeftSeconds() + "</p>";
+		html += "<p>Time: " + timer.getTimeLeftSeconds() + "</p>";
 		// Closes div id=timer
 		html += "</div>";
 
@@ -233,6 +233,14 @@ var gameView = function() {
 			displaySubmitButton();
 		},
 		/**
+		 * Removes HTML/CSS field and header
+		 */
+		removeSelf: function() {
+			$('#header').remove();
+			$('#game-field').remove();
+			$('.center-button').remove();
+		},
+		/**
 		 * Refreshes the view for the given cell
 		 * To be called if the shown value changes
 		 * @param {Object} cellToRefresh
@@ -318,7 +326,12 @@ var gameView = function() {
 		refreshTimer: function() {
 			// First get all digits and replace them with the new value
 			// Then replace the HTML with the new HTML
-			$('#timer').html($('#timer').html().replace(/\d+/g, timer.getTimeLeftSeconds()));
+			var html = $('#timer').html();
+			// Checked in case timer is attempting to refresh when it no longer exists
+			if (typeof html === "String") {
+				html.replace(/\d+/g, timer.getTimeLeftSeconds());
+				$('#timer').html(html);
+			}
 		},
 		/**
 		 * Refreshes flag's left on the view

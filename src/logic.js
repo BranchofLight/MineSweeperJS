@@ -309,16 +309,19 @@ var listeners = {
           gameView.refreshFlagsLeft();
         }
 
+
         if (clickedCell.getRealValue() === blank()) {
           gameView.revealAdjacentCells(clickedCell);
-        } /* else {
-          // code for if it is a mine
-        }*/
+        }
 
-  			clickedCell.setIsClicked(true);
-  			gameView.refreshCell(clickedCell);
-        gameView.setClickedClass(clickedCell, true);
-
+        if (clickedCell.getRealValue() === mine()) {
+          gameView.removeSelf();
+          displayEndGame();
+        } else {
+          clickedCell.setIsClicked(true);
+    			gameView.refreshCell(clickedCell);
+          gameView.setClickedClass(clickedCell, true);
+        }
       } else if (event.button == 2) {
         // Only flag if cell has not been clicked
         if (!clickedCell.getIsClicked()) {
