@@ -420,8 +420,10 @@ var removeWelcomeView = function() {
  */
 var displayMainMenu = function() {
 	var html = "<div id=\"welcome\">";
+
 	html += "<h1>Welcome to MineSweeper JS!</h1>";
 	html += "<h2>Quick Play</h2>";
+
 	html += "<form id=\"diff-form\">";
 	html += "<input type=\"radio\" name=\"difficulty\" id=\"beginner\" checked>";
 	html += "<label for=\"beginner\">Beginner</label><br>";
@@ -433,18 +435,27 @@ var displayMainMenu = function() {
 	html += "<label for=\"impossible\">Impossible</label><br>";
 	html += "<button class=\"btn\" id=\"quick-play-button\">Play</button>";
 	html += "</form>";
+
 	html += "<h2>Custom Game</h2>";
+
 	html += "<p id=\"row-select\">Rows (between 4 and 30): </p>";
 	html += "<input type=\"text\" name=\"row-text\" size=\"2\" id=\"row-input\">";
 	html += "<br><br>";
+
 	html += "<p id=\"col-select\">Columns (between 4 and 30): </p>";
 	html += "<input type=\"text\" name=\"col-text\" size=\"2\" id=\"col-input\">";
 	html += "<br><br>";
+
 	html += "<p id=\"mines-select\">Number of Mines: </p>";
 	html += "<input type=\"text\" name=\"mines-text\" size=\"2\" ";
-	html += "id=\"mines-input\"><br><button class=\"btn\"";
+	html += "id=\"mines-input\">";
+	html += "<br>";
+
+	html += "<button class=\"btn\"";
 	html += "id=\"custom-play-button\">Play</button>";
+
 	html += "</div>";
+	
 	$('#main-container').append(html);
 };
 
