@@ -48,6 +48,11 @@ body * {
 	margin-top: 5%;
 }
 
+#error {
+	color: #CF2E26;
+	margin-bottom: -3%;
+}
+
 #diff-form label {
 	font-family: 'Arimo', sans-serif;
 	font-size: 1.1em;

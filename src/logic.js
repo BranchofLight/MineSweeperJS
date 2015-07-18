@@ -396,18 +396,46 @@ var listeners = {
         var c = parseInt($('#col-input').val());
         var m = parseInt($('#mines-input').val());
 
+        var message = "";
+        var isValid = false;
+
+        // Check if all values are numbers
         if (!isNaN(r) && !isNaN(c) && !isNaN(m)) {
-          console.log("valid input");
-          if (r >= 4 && r <= 30) {
-            console.log("valid rows");
+          // Check if rows and columns are in arbitrary boundries
+          if (r >= 4 && r <= 30 && c >= 4 && c <= 30) {
+            // Calculate percentage and check it against input
+            var minePercentage = (m/(r*c))*100;
+            // Final check, if everything is valid
+            if (m > 0 && minePercentage < 100) {
+              transitionToGame({
+                diff: "custom",
+                rows: r,
+                cols: c,
+                mines: m
+              });
+              isValid = true;
+            } else {
+              message = "Mines exceed lower or upper bound constraints."
+            }
+          } else {
+            message = "Check number of columns and rows.";
           }
-          if (c >= 4 && c <= 30) {
-            console.log("valid cols");
+        } else {
+          message = "<br>" +
+            "Invalid input. Make sure input consists of only numbers.";
+        }
+
+        if (!isValid) {
+          // If nothing with an id="error" exists
+          if (!$('#error').length) {
+            $('#custom-play-button').after("<p id=\"error\">Error: " + message
+              + "</p>");
+          } else if ($('#error').html() != "Error: " + message) {
+            // If message is new replace it with new one
+            $('#error').html("Error: " + message);
           }
-          var minePercentage = (m/(r*c))*100;
-          if (m > 0 && minePercentage < 100) {
-            console.log("valid mines");
-          }
+        } else if ($('#error').length) {
+          $('#error').remove();
         }
       });
     }
