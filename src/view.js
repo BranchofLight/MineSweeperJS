@@ -67,7 +67,7 @@ var transitionToEndGame = function() {
 	// Used as a callback later
 	var animation = function() {
 		setTimeout(function() {
-			$('#main-container *').fadeOut(1500, function() {
+			$('#game-field').fadeOut(1000, function() {
 				if (!hasFadedOnce) {
 					gameView.removeSelf();
 					displayEndGame();

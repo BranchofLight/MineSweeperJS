@@ -346,10 +346,12 @@ var listeners = {
           }
         }
 
-        // Check for win on either left or right click
+        // Check for win or loss on either left or right click
         // AFTER cell modifications above
         if (event.button === 0 || event.button === 1) {
           if (checkWin()) {
+            transitionToEndGame();
+          } else if (clickedCell.getRealValue() === mine()) {
             transitionToEndGame();
           }
         }
