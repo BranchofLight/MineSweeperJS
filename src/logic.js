@@ -415,7 +415,7 @@ var listeners = {
               });
               isValid = true;
             } else {
-              message = "Mines exceed lower or upper bound constraints."
+              message = "Mines exceed lower or upper bound constraints.";
             }
           } else {
             message = "Check number of columns and rows.";
@@ -428,8 +428,8 @@ var listeners = {
         if (!isValid) {
           // If nothing with an id="error" exists
           if (!$('#error').length) {
-            $('#custom-play-button').after("<p id=\"error\">Error: " + message
-              + "</p>");
+            $('#custom-play-button').after(
+              "<p id=\"error\">Error: " + message + "</p>");
           } else if ($('#error').html() != "Error: " + message) {
             // If message is new replace it with new one
             $('#error').html("Error: " + message);
@@ -437,6 +437,10 @@ var listeners = {
         } else if ($('#error').length) {
           $('#error').remove();
         }
+      });
+
+      $('#back-button').on('click', function() {
+        transitionToMainMenu();
       });
     }
   },
@@ -447,6 +451,8 @@ var listeners = {
   	},
     buttons: function() {
       $('#quick-play-button').off('click');
+      $('#custom-play-button').off('click');
+      $('#back').off('click');
     }
   }
 };

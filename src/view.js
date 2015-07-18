@@ -56,7 +56,60 @@ var displayMainMenu = function() {
 };
 
 /**
- * Transitions the view to the end game screen
+ * Transitions the view to the main menu from game view
+ */
+var transitionToMainMenu = function() {
+	// Needed because the wildcard * calls the callback
+	// . for every element otherwise
+	var hasFadedOnce = false;
+
+	// Used as a callback later
+	var animation = function() {
+		setTimeout(function() {
+			$('#game-field, #header, #back-button').fadeOut(1000).promise().done(
+				function() {
+					if (!hasFadedOnce) {
+						gameView.removeField();
+						displayMainMenu();
+						hasFadedOnce = true;
+						addListeners();
+					}
+				}
+			);
+		}, 50);
+	};
+
+	// Prevent clicks or hovers from changing CSS
+	$('.cell').removeClass('not-clicked');
+	// Remove listeners to prevent clicks from changing view
+	// Called with animation as a callback
+	removeListeners(animation);
+};
+
+/**
+ * Transitions the view to the game screen from main menu
+ * @param {Object} settings
+ */
+var transitionToGame = function(settings) {
+	// Used as a callback later
+	var animation = function() {
+		setTimeout(function() {
+			$('#welcome').fadeOut(750, function() {
+				$('#welcome').remove();
+				gameSetup(settings);
+				// Turn buttons back on
+				listeners.on.buttons();
+			});
+		}, 100);
+	};
+
+	// Remove listeners to prevent clicks from changing view
+	listeners.off.buttons();
+	animation();
+};
+
+/**
+ * Transitions the view to the end game screen from game view
  * @param Will take a paramater for loss/win and time
  */
 var transitionToEndGame = function() {
@@ -69,7 +122,7 @@ var transitionToEndGame = function() {
 		setTimeout(function() {
 			$('#game-field').fadeOut(1000, function() {
 				if (!hasFadedOnce) {
-					gameView.removeSelf();
+					gameView.removeField();
 					displayEndGame();
 					hasFadedOnce = true;
 				}
@@ -82,25 +135,6 @@ var transitionToEndGame = function() {
 	// Remove listeners to prevent clicks from changing view
 	// Called with animation as a callback
 	removeListeners(animation);
-};
-
-/**
- * Transitions the view to the main game screen
- * @param {Object} settings
- */
-var transitionToGame = function(settings) {
-	// Used as a callback later
-	var animation = function() {
-		setTimeout(function() {
-			$('#welcome').fadeOut(750, function() {
-				gameSetup(settings);
-			});
-		}, 100);
-	};
-
-	// Remove listeners to prevent clicks from changing view
-	listeners.off.buttons();
-	animation();
 };
 
 /**
@@ -176,7 +210,7 @@ var gameView = function() {
 				// Closes class "
 				html += "\" ";
 				html += "data-row=\"" + i + "\" data-col=\"" + j + "\">";
-				html += cellToDisplay.getRealValue();//getShownValue();
+				html += cellToDisplay.getShownValue();
 				html += "</div>";
 			}
 
@@ -190,6 +224,13 @@ var gameView = function() {
 		setResizeEvent(function() {
 			setCellDimensions();
 		});
+	};
+
+	var displayMenuButton = function() {
+		var html = "<div class=\"center-button\">";
+		html += "<button class=\"btn\" id=\"back-button\">Back</button>";
+		html += "</div>";
+		$('#game-field').after(html);
 	};
 
 	/**
@@ -253,7 +294,7 @@ var gameView = function() {
 	/* Public Functions */
 	return {
 		/**
-		 * Displays field as text
+		 * Displays field as text (for basic debugging purposes)
 		 */
 		displayTextField: function() {
 			strField = "";
@@ -273,11 +314,12 @@ var gameView = function() {
 		displayGameView: function() {
 			displayHeader();
 			displayField();
+			displayMenuButton();
 		},
 		/**
 		 * Removes HTML/CSS field and header
 		 */
-		removeSelf: function() {
+		removeField: function() {
 			$('#header').remove();
 			$('#game-field').remove();
 			$('.center-button').remove();
