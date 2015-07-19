@@ -3,6 +3,9 @@
  * Source:  src/view.js
  */
 
+// Holds the settings loaded from transitionToGame
+var gameSettings = null;
+
 /**
  * Name: displayMainMenu
  * Purpose: Will display the main menu on the screen
@@ -56,7 +59,7 @@ var displayMainMenu = function() {
 };
 
 /**
- * Transitions the view to the main menu from game view
+ * Transitions the view to the main menu
  */
 var transitionToMainMenu = function() {
 	// Needed because the wildcard * calls the callback
@@ -66,10 +69,23 @@ var transitionToMainMenu = function() {
 	// Used as a callback later
 	var animation = function() {
 		setTimeout(function() {
-			$('#game-field, #header, #back-button').fadeOut(1000).promise().done(
+			// Determine what the current view is
+			var $currentView = null;
+			if ($('#game-field').length) {
+				$currentView = $('#game-field, #header, #back-button');
+			} else if ($('#end-game').length) {
+				$currentView = $('#end-game');
+			}
+
+			// Use the current view here
+			$currentView.fadeOut(1000).promise().done(
 				function() {
 					if (!hasFadedOnce) {
-						gameView.removeField();
+						if ($currentView === $('#game-field')) {
+							gameView.removeField();
+						} else {
+							$currentView.remove();
+						}
 						displayMainMenu();
 						hasFadedOnce = true;
 						addListeners();
@@ -88,15 +104,27 @@ var transitionToMainMenu = function() {
 };
 
 /**
- * Transitions the view to the game screen from main menu
+ * Transitions the view to the game screen from anywhere
  * @param {Object} settings
  */
 var transitionToGame = function(settings) {
+	// Set gameSettings
+	gameSettings = settings;
+
 	// Used as a callback later
 	var animation = function() {
 		setTimeout(function() {
-			$('#welcome').fadeOut(750, function() {
-				$('#welcome').remove();
+			// Determine what the current view is
+			var $currentView = null;
+			if ($('#welcome').length) {
+				$currentView = $('#welcome');
+			} else if ($('#end-game').length) {
+				$currentView = $('#end-game');
+			}
+
+			// Use the current view here
+			$currentView.fadeOut(750, function() {
+				$currentView.remove();
 				gameSetup(settings);
 				// Turn buttons back on
 				listeners.on.buttons();
@@ -111,9 +139,11 @@ var transitionToGame = function(settings) {
 
 /**
  * Transitions the view to the end game screen from game view
- * @param Will take a paramater for loss/win and time
+ * @param {Boolean} didWin
  */
-var transitionToEndGame = function() {
+var transitionToEndGame = function(didWin) {
+	timer.stopTimer();
+
 	// Needed because the wildcard * calls the callback
 	// . for every element otherwise
 	var hasFadedOnce = false;
@@ -124,8 +154,10 @@ var transitionToEndGame = function() {
 			$('#game-field').fadeOut(1000, function() {
 				if (!hasFadedOnce) {
 					gameView.removeField();
-					displayEndGame();
+					displayEndGame(didWin);
 					hasFadedOnce = true;
+					// Needed for buttons on end game screen
+					addListeners();
 				}
 			});
 		}, 500);
@@ -143,15 +175,26 @@ var transitionToEndGame = function() {
  * Purpose: Will display the end game on the screen
  * Note: Does no HTML deletion so no <div> other than
  * . main-container should be alive
- * @param Will take a paramater for loss/win and time
+ * @param {Boolean} didWin
  */
-var displayEndGame = function() {
+var displayEndGame = function(didWin) {
 	var html = "<div id=\"end-game\" style=\"display:none\">";
-	html += "<h1>Congratulations! / Game Over</h1>";
-	html += "<p class=\"top-marg\">You won / lost in #time seconds</p>";
+	if (didWin) {
+		html += "<h1>Congratulations!</h1>";
+		html += "<p class=\"top-marg\">You won ";
+	} else {
+		html += "<h1>Game Over</h1>";
+		html += "<p class=\"top-marg\">You lost ";
+	}
+	html += " in " + timer.getTimeLeftSeconds() + " second";
+	if (timer.getTimeLeftSeconds() === 1) {
+		html += "</p>";
+	} else {
+		html += "s</p>";
+	}
 	html += "<p>Play again?</p>";
-	html += "<button class=\"btn\">Play Same Setup</button>";
-	html += "<button class=\"btn\">Play New Setup</button>";
+	html += "<button class=\"btn\" id=\"replay-button\">Play Same Setup</button>";
+	html +="<button class=\"btn\" id=\"new-game-button\">Play New Setup</button>";
 	html += "</div>";
 
 	$('#main-container').append(html);

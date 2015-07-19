@@ -146,6 +146,10 @@ body * {
 	font-size: 1.25em;
 }
 
+#end-game button:first-of-type {
+	margin-right: 3%;
+}
+
 .top-marg {
 	margin-top: 5%;
 }

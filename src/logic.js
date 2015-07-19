@@ -351,16 +351,15 @@ var listeners = {
         // AFTER cell modifications above
         if (event.button === 0 || event.button === 1) {
           if (checkWin()) {
-            transitionToEndGame();
+            transitionToEndGame(true);
           } else if (clickedCell.getRealValue() === mine()) {
-            transitionToEndGame();
+            transitionToEndGame(false);
           }
         }
   		});
   	},
     buttons: function() {
       $('#quick-play-button').on('click', function() {
-        console.log("clicked");
         if ($('#beginner').prop("checked")) {
           transitionToGame({
             diff: "beginner",
@@ -387,7 +386,7 @@ var listeners = {
             diff: "impossible",
             rows: 25,
             cols: 25,
-            mines: 156 // ~25%
+            mines: 137 // ~22%
           });
         }
       });
@@ -443,6 +442,14 @@ var listeners = {
       $('#back-button').on('click', function() {
         transitionToMainMenu();
       });
+
+      $('#replay-button').on('click', function() {
+        transitionToGame(gameSettings);
+      });
+
+      $('#new-game-button').on('click', function() {
+        transitionToMainMenu();
+      });
     }
   },
   // Should remove whatever was set in on (if desired)
@@ -454,6 +461,8 @@ var listeners = {
       $('#quick-play-button').off('click');
       $('#custom-play-button').off('click');
       $('#back').off('click');
+      $('#replay-button').off('click');
+      $('#new-game-button').off('click');
     }
   }
 };
