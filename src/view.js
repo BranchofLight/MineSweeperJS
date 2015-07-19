@@ -186,7 +186,7 @@ var displayEndGame = function(didWin) {
 		html += "<h1>Game Over</h1>";
 		html += "<p class=\"top-marg\">You lost ";
 	}
-	html += " in " + timer.getTimeLeftSeconds() + " second";
+	html += gameSettings.diff + " in " + timer.getTimeLeftSeconds() + " second";
 	if (timer.getTimeLeftSeconds() === 1) {
 		html += "</p>";
 	} else {
