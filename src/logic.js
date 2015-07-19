@@ -110,6 +110,7 @@ var gameField = function () {
       // Get mine locations
       var mineLocations = this.generateMineLocations();
       // Create iterators early to be used multiple times
+      field = [];
       var i = 0, j = 0;
 			// Push new field onto field
 			for (i = 0; i < rows; i++) {
@@ -504,6 +505,8 @@ var checkWin = function() {
  */
 var timer = function() {
   var timeLeft = 0;
+  // Initialized so can be cleared later on
+  var interval = null;
 
   return {
     /**
@@ -546,7 +549,7 @@ var timer = function() {
       // Default to decrementing
       shouldInc = (typeof shouldInc === "boolean") ? shouldInc : false;
 
-      var interval = setInterval(function() {
+      interval = setInterval(function() {
         // Decrement or increment timer
         if (shouldInc) {
           that.decrementTimeLeft(leap);
@@ -560,6 +563,16 @@ var timer = function() {
           clearInterval(interval);
         }
       }, leap);
+    },
+
+    /**
+     * Stops the timer
+     */
+    stopTimer: function() {
+      // setInterval() returns a number ID
+      if (typeof interval === "number" && interval !== null) {
+        clearInterval(interval);
+      }
     }
   };
 }();

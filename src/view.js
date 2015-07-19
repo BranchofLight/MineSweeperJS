@@ -73,6 +73,7 @@ var transitionToMainMenu = function() {
 						displayMainMenu();
 						hasFadedOnce = true;
 						addListeners();
+						timer.stopTimer();
 					}
 				}
 			);
