@@ -18,10 +18,11 @@
      mines: 10,
    };
 
+   gameSettings = settings;
+
    gameField.setTotalMines(settings.mines);
    gameField.generateField(settings.rows, settings.cols);
    timer.setTimeLeft(0, true);
-
 
    // Display all views
    gameView.displayGameView();
@@ -30,6 +31,26 @@
      // One second increments
      timer.startTimer(1000);
    });
+ };
+
+ var botGameSetup = function(settings) {
+   // If not an object (or null) set to a default object (eg. beginner)
+   settings = (typeof settings === "object" && settings !== null) ? settings :
+   {
+     diff: "beginner",
+     rows: 9,
+     cols: 9,
+     mines: 10,
+   };
+
+   gameSettings = settings;
+
+   gameField.setTotalMines(settings.mines);
+   gameField.generateField(settings.rows, settings.cols);
+   timer.setTimeLeft(0, true);
+
+   // Display all views
+   gameView.displayBotGameView();
  };
 
  /**
@@ -198,7 +219,7 @@ var cell = function(r, c, val) {
 	/* Set Private Variables */
 	var row = (typeof r === "number") ? r : 0;
 	var col = (typeof c === "number") ? c : 0;
-	var value = val || undefined;
+	var value = val; // Allow it to be anything
 	var isClicked = false;
   var isFlagged = false;
 
@@ -216,7 +237,7 @@ var cell = function(r, c, val) {
 			return value;
 		},
     setRealValue: function(val) {
-      value = val | blank();
+      value = val || blank();
     },
 		// Returns the value shown to the player
 		getShownValue: function() {
@@ -248,14 +269,14 @@ var getAdjacentCells = function(cellToCheck) {
 
   // All locations to check
   var adjacent = [
-    [r-1, c],
     [r-1, c-1],
+    [r-1, c],
     [r-1, c+1],
     [r, c-1],
     [r, c+1],
     [r+1, c-1],
     [r+1, c],
-    [r+1, c+1],
+    [r+1, c+1]
   ];
 
   var adjacentCells = [];
@@ -268,6 +289,61 @@ var getAdjacentCells = function(cellToCheck) {
     if (row >= 0 && row < gameField.getRows() &&
         col >= 0 && col < gameField.getColumns()) {
       adjacentCells.push(gameField.getCell(row, col));
+    } else if (typeof isBot === "boolean" && isBot) {
+      // Location out of bounds but bot calling this? Add padding
+      var newCell = cell(row, col, NaN);
+      newCell.setIsClicked(true);
+      adjacentCells.push(newCell);
+    }
+  }
+
+  return adjacentCells;
+};
+
+/**
+ * Returns an array of deep copied cells adjacent to the paramater cell
+ * @param {Object} cellToCheck
+ * @return {Array} adjacentCells
+ */
+var botGetAdjacentCells = function(cellToCheck) {
+  var r = cellToCheck.getRow();
+  var c = cellToCheck.getCol();
+
+  // All locations to check
+  var adjacent = [
+    [r-1, c-1],
+    [r-1, c],
+    [r-1, c+1],
+    [r, c-1],
+    [r, c+1],
+    [r+1, c-1],
+    [r+1, c],
+    [r+1, c+1]
+  ];
+
+  var adjacentCells = [];
+
+  for (var i = 0; i < adjacent.length; i++) {
+    var row = adjacent[i][0];
+    var col = adjacent[i][1];
+
+    // If location is out of bounds do not check anything
+    if (row >= 0 && row < gameField.getRows() &&
+        col >= 0 && col < gameField.getColumns()) {
+      // Create oldCell to make push slimmer
+      var oldCell = gameField.getCell(row, col);
+      // The oldCell is now deep copied to prevent getShownValue changing
+      // over the bots lifespan
+      var nCell = cell(oldCell.getRow(), oldCell.getCol(), oldCell.getRealValue());
+      nCell.setIsClicked(oldCell.getIsClicked());
+      nCell.setIsFlagged(oldCell.getIsFlagged());
+      adjacentCells.push(nCell);
+    } else {
+      // Location out of bounds? Add padding
+      var newCell = cell(row, col, NaN);
+      // Spoof it as clicked
+      newCell.setIsClicked(true);
+      adjacentCells.push(newCell);
     }
   }
 
@@ -494,6 +570,7 @@ var removeListeners = function(callback) {
 var checkWin = function() {
   var notClicked = 0;
   var flagged = 0;
+  var strShown = "", strReal;
   for (var i = 0; i < gameField.getRows(); i++) {
     for (var j = 0; j < gameField.getColumns(); j++) {
       if (!gameField.getCell(i, j).getIsClicked()) {
@@ -502,9 +579,15 @@ var checkWin = function() {
       if (gameField.getCell(i, j).getIsFlagged()) {
         flagged += 1;
       }
+      // If there is a mine showing there was no win
+      if (gameField.getCell(i, j).getShownValue() === mine()) {
+        return false;
+      }
     }
   }
 
+  console.log("Shown values: " + strShown);
+  console.log("Real values: " + strReal);
   return notClicked === flagged || notClicked === gameField.getTotalMines();
 };
 

@@ -108,9 +108,6 @@ var transitionToMainMenu = function() {
  * @param {Object} settings
  */
 var transitionToGame = function(settings) {
-	// Set gameSettings
-	gameSettings = settings;
-
 	// Used as a callback later
 	var animation = function() {
 		setTimeout(function() {
@@ -135,6 +132,10 @@ var transitionToGame = function(settings) {
 	// Remove listeners to prevent clicks from changing view
 	listeners.off.buttons();
 	animation();
+};
+
+var botClearView = function() {
+	$('#header, #game-field').remove();
 };
 
 /**
@@ -359,6 +360,10 @@ var gameView = function() {
 			displayHeader();
 			displayField();
 			displayMenuButton();
+		},
+		displayBotGameView: function() {
+			displayHeader();
+			displayField();
 		},
 		/**
 		 * Removes HTML/CSS field and header

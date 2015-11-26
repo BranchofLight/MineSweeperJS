@@ -8,13 +8,14 @@ module.exports = function(grunt) {
         seperator: ',',
       },
       dist: {
-        src: ['src/*.js'],
+        src: ['src/logic.js', 'src/view.js',
+         'src/index.js', 'src/bot.js'],
         dest: 'dist/debug.js',
       },
     },
     watch: {
       files: ['src/*.js'],
-      tasks: ['concat'],
+      tasks: ['lint', 'concat'],
     },
     jshint: {
       src: ['Gruntfile.js'],
@@ -40,7 +41,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   // Default task(s).
-  grunt.registerTask('default', ['concat', 'jshint']);
+  grunt.registerTask('default', ['concat', 'jshint', 'uglify']);
   // Non-default task(s)
   grunt.registerTask('wat', ['watch']);
   grunt.registerTask('lint', ['jshint']);
