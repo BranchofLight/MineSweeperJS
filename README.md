@@ -2,4 +2,4 @@
 A JS Minesweeper clone.
 
 ### Testing From Site
-Currently down. 
+http://branchoflight.github.io/MineSweeperJS/
