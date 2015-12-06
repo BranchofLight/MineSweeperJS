@@ -1,5 +1,7 @@
-# minesweeperjs
+# [MineSweeperJS](http://branchoflight.github.io/MineSweeperJS/)
+
 A JS Minesweeper clone.
 
-### Testing From Site
-http://branchoflight.github.io/MineSweeperJS/
+<p align="center">
+  <img src="img/screenshot.jpg"/>
+</p>
